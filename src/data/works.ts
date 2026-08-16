@@ -216,6 +216,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Pendant",
     price: 100,
     image: sq("df8ced53-cd0e-471c-aba5-db852d433f3b", "IMG_2755.jpg"),
+    soldOut: true,
   },
   {
     slug: "change",
@@ -253,6 +254,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Pique",
     price: 100,
     image: sq("9b92a0b3-9e4b-4158-94fe-789b5dad27b6", "IMG_2579.jpg"),
+    soldOut: true,
   },
   {
     slug: "pendulum",
@@ -307,6 +309,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Hecate",
     price: 100,
     image: sq("0bf65d48-59f0-4ab4-9043-b5f799dd7950", "IMG_2110.jpg"),
+    soldOut: true,
   },
   {
     slug: "helen",
@@ -325,6 +328,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Flight of Ideas",
     price: 150,
     image: sq("1717834989873-HN8SWUCAWYY3OJYYH8DW", "IMG_1798.jpg"),
+    soldOut: true,
   },
   {
     slug: "mercurial",
@@ -343,6 +347,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Thoughts",
     price: 150,
     image: sq("1717722240945-GFFIBP6Z71NZJIXT648J", "IMG_1761.jpeg"),
+    soldOut: true,
   },
   {
     slug: "derailmentassociative-looseness",
@@ -361,6 +366,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Avolition",
     price: 100,
     image: sq("1716085260336-76U5J7LF2JUEAWRRCJBE", "D39B4615-1DB6-42BB-BB9A-6A52A4C12DF9.jpg"),
+    soldOut: true,
   },
   {
     slug: "creation",
@@ -374,6 +380,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Perception",
     price: 100,
     image: sq("1713678417698-9Q8NKD2DKKOJ3SRSAMBW", "1.jpg"),
+    soldOut: true,
   },
   {
     slug: "tether",
@@ -410,12 +417,14 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Gatsby",
     price: 150,
     image: sq("1694746684652-S773KRJTA88MGJBXHUE2", "IMG_7846.jpg"),
+    soldOut: true,
   },
   {
     slug: "drowning",
     title: "Drowning",
     price: 150,
     image: sq("1694617377878-RRT2LASC4HS8DGG14A7P", "IMG_7851.jpg"),
+    soldOut: true,
   },
   {
     slug: "restored",
@@ -428,6 +437,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Rumination",
     price: 100,
     image: sq("1694742088778-W8GDPZT9YV02GGECTAIR", "IMG_7869.jpg"),
+    soldOut: true,
   },
   {
     slug: "merle",
@@ -440,18 +450,21 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Tootsie",
     price: 150,
     image: sq("1694982093254-VRF7E7DL5DUYETAAMPLH", "IMG_7918.png"),
+    soldOut: true,
   },
   {
     slug: "funeral",
     title: "Funeral",
     price: 150,
     image: sq("1695268556212-89A8IQ0FTA5C6GQOEI3V", "Untitled-1.png"),
+    soldOut: true,
   },
   {
     slug: "distraction",
     title: "Distraction",
     price: 150,
     image: sq("1695612302813-FAOA2IZ9DSV57VCEW22A", "IMG_8060.png"),
+    soldOut: true,
   },
   {
     slug: "suture",
@@ -464,12 +477,14 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Hyenas",
     price: 150,
     image: sq("1696734494455-L8T9UDSD7ZZEDR2F47GJ", "IMG_8238.png"),
+    soldOut: true,
   },
   {
     slug: "brave",
     title: "Brave",
     price: 150,
     image: sq("1696741538303-N7Q7T8VT6V5TQY56GSMM", "IMG_8248.png"),
+    soldOut: true,
   },
   {
     slug: "harvesting",
@@ -482,24 +497,28 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Memory",
     price: 150,
     image: sq("1696828953024-U9GXE8JYPTNJV6CLK990", "IMG_8274.png"),
+    soldOut: true,
   },
   {
     slug: "rat",
     title: "Rat",
     price: 150,
     image: sq("1702425509287-8UR1IHHXLQZ147TWNO3F", "IMG_0072.png"),
+    soldOut: true,
   },
   {
     slug: "church",
     title: "Church",
     price: 100,
     image: sq("1702425656807-LO46PZH62SCD51E21PZQ", "IMG_0069.png"),
+    soldOut: true,
   },
   {
     slug: "salt",
     title: "Salt",
     price: 150,
     image: sq("1702538368323-D0IMI65KOQ56WI4RW0TC", "IMG_0114.png"),
+    soldOut: true,
   },
   {
     slug: "dreams",
@@ -524,12 +543,14 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Ocean by Night",
     price: 100,
     image: sq("1707268372355-Z7RBBKZ0ZJ8G8RR98OU7", "Red.jpg"),
+    soldOut: true,
   },
   {
     slug: "paroxysm",
     title: "Paroxysm",
     price: 100,
     image: sq("1707598995487-CCQ2P0TX6MMAX90B2IGV", "paroxysm-4.jpg"),
+    soldOut: true,
   },
   {
     slug: "avoid",
@@ -555,6 +576,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Dissimulation",
     price: 100,
     image: sq("1708057045057-C5G35VVE7U5M86ZLVWTE", "dissimulation-1.jpg"),
+    soldOut: true,
   },
   {
     slug: "absence",
@@ -585,6 +607,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Slander",
     price: 100,
     image: sq("1712375815110-H0DQNE1WY57MQ05GXIK9", "1.jpg"),
+    soldOut: true,
   },
   {
     slug: "lostboy",
@@ -603,18 +626,21 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Resurrection",
     price: 150,
     image: sq("1714244858673-7064R0V684FRHLWFQKTI", "1.jpg"),
+    soldOut: true,
   },
   {
     slug: "grief",
     title: "Grief",
     price: 150,
     image: sq("1714350419035-HLWK7ESN3CP8GKHF1980", "1.jpg"),
+    soldOut: true,
   },
   {
     slug: "canidae",
     title: "Canidae",
     price: 150,
     image: sq("1715830944574-1F2WQSDC9B7A87EK19RQ", "IMG_1539.png"),
+    soldOut: true,
   },
   {
     slug: "eden",
@@ -627,12 +653,14 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Vulnerable",
     price: 100,
     image: sq("1716086408016-W32S00EEU4L7NW3OOR0I", "3D6B52BE-F861-4D7C-BB1D-DE054717630D_1_201_a.jpg"),
+    soldOut: true,
   },
   {
     slug: "complex",
     title: "Complex",
     price: 200,
     image: sq("1716144901078-HUAAMD2G44F4GI2YJYQZ", "886DF764-BE84-4EEF-92EF-FA7EED9E0AFC_1_201_a.jpg"),
+    soldOut: true,
   },
   {
     slug: "lithium",
@@ -669,6 +697,7 @@ const catalog: Omit<Work, "images" | "tags">[] = [
     title: "Duella",
     price: 100,
     image: sq("1714348891038-SWVGU4MWP3RS4ZRLBHFP", "1.jpg"),
+    soldOut: true,
   },
   {
     slug: "monsters",
