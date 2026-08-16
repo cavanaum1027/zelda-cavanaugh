@@ -15,12 +15,13 @@ export type Work = {
   attribution?: string;
   description?: string;
   print?: boolean;
+  tags: string[];
 };
 
 const sq = (id: string, file: string) =>
   `https://images.squarespace-cdn.com/content/v1/64e7d9b4dff28018353dc5f7/${id}/${file}`;
 
-const catalog: Omit<Work, "images">[] = [
+const catalog: Omit<Work, "images" | "tags">[] = [
   {
     slug: "beloved",
     title: "Beloved",
@@ -677,15 +678,38 @@ const catalog: Omit<Work, "images">[] = [
   },
 ];
 
-function enrich(work: Omit<Work, "images">): Work {
+function parseDiagnosis(text?: string) {
+  if (!text) return;
+  const match = text.match(/diagnostic criteria (?:for|involving) ([^.]+)/i);
+  return match?.[1]?.replace(/[.”"]+$/, "").trim();
+}
+
+function diagnosisTags(diagnosis?: string) {
+  if (!diagnosis) return [];
+  const tags = [diagnosis];
+  const n = diagnosis.toLowerCase();
+  if (/bipolar|bi-polar|manic episode/.test(n)) tags.push("Bipolar");
+  if (/schizophren/.test(n)) tags.push("Schizophrenia");
+  if (/anxiety/.test(n)) tags.push("Anxiety");
+  if (/obsessive-compulsive|ocpd/.test(n)) tags.push("Obsessive-Compulsive");
+  if (/adjustment/.test(n)) tags.push("Adjustment Disorders");
+  if (/bereavement|grief|ghost sickness/.test(n)) tags.push("Grief");
+  if (/dysthymic|depress/.test(n)) tags.push("Depression");
+  return [...new Set(tags)];
+}
+
+function enrich(work: Omit<Work, "images" | "tags">): Work {
   const copy = productCopy[work.slug];
   const local = localWorkImages[work.slug];
   const images = local?.length ? local : [work.image];
+  const merged = { ...work, ...copy };
+  const diagnosis = merged.diagnosis ?? parseDiagnosis(merged.description);
   return {
-    ...work,
-    ...copy,
+    ...merged,
+    diagnosis,
     image: images[0] ?? work.image,
     images,
+    tags: diagnosisTags(diagnosis),
   };
 }
 
@@ -695,6 +719,21 @@ export const featuredWorks = works.filter((work) => work.featured);
 
 export function getWork(slug: string) {
   return works.find((work) => work.slug === slug);
+}
+
+export function similarWorks(work: Work, limit = 4) {
+  if (work.tags.length === 0) return [];
+  return works
+    .filter((item) => item.slug !== work.slug)
+    .map((item) => {
+      const overlap = item.tags.filter((tag) => work.tags.includes(tag));
+      const exact = Boolean(work.diagnosis && item.diagnosis === work.diagnosis);
+      return { item, overlap: overlap.length, exact };
+    })
+    .filter((entry) => entry.overlap > 0)
+    .sort((a, b) => Number(b.exact) - Number(a.exact) || b.overlap - a.overlap)
+    .slice(0, limit)
+    .map((entry) => entry.item);
 }
 
 export function formatPrice(price: number) {

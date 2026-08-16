@@ -6,7 +6,7 @@ import { AddToCart } from "@/components/AddToCart";
 import { WorkGallery } from "@/components/WorkGallery";
 import { WorkTile } from "@/components/WorkTile";
 import { gicleeNote } from "@/data/product-copy";
-import { formatPrice, getWork, works } from "@/data/works";
+import { formatPrice, getWork, similarWorks, works } from "@/data/works";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -33,8 +33,7 @@ export default async function WorkDetailPage({ params }: Props) {
 
   const index = works.findIndex((item) => item.slug === work.slug);
   const plate = String(index + 1).padStart(2, "0");
-  const prev = works[(index - 1 + works.length) % works.length];
-  const next = works[(index + 1) % works.length];
+  const related = similarWorks(work);
   const images = work.images.length ? work.images : [work.image];
 
   return (
@@ -63,10 +62,10 @@ export default async function WorkDetailPage({ params }: Props) {
             </blockquote>
           ) : null}
           {work.description ? (
-            <p className="mt-8 max-w-sm text-sm leading-7 text-fg/55">{work.description}</p>
+            <p className="mt-8 max-w-prose text-sm leading-7 text-fg/55">{work.description}</p>
           ) : null}
           {work.print ? (
-            <p className="mt-6 max-w-sm text-sm leading-7 text-fg/45">{gicleeNote}</p>
+            <p className="mt-6 max-w-prose text-sm leading-7 text-fg/45">{gicleeNote}</p>
           ) : null}
           <p className="mt-4 text-[12px] text-fg/40">
             {work.diagnosis ?? (work.print ? "Giclée print" : "Original work")}
@@ -84,29 +83,33 @@ export default async function WorkDetailPage({ params }: Props) {
         </div>
       </div>
 
-      <section aria-labelledby="other-work-heading" className="relative mt-24">
-        <div className="flex items-center gap-4" aria-hidden="true">
-          <span className="h-px flex-1 bg-fg/25" />
-          <span className="text-accent">+</span>
-          <span className="h-px flex-1 bg-fg/25" />
-        </div>
-        <h2
-          id="other-work-heading"
-          className="mt-8 text-sm font-semibold lowercase tracking-wide text-fg/55"
-        >
-          other work
-        </h2>
-        <nav className="mt-8 grid gap-10 sm:grid-cols-2">
-          <div>
-            <p className="mb-3 text-[12px] lowercase text-fg/40">previous</p>
-            <WorkTile work={prev} figureClassName="aspect-[4/5]" />
+      {related.length > 0 ? (
+        <section aria-labelledby="similar-works-heading" className="relative mt-24">
+          <div className="flex items-center gap-4" aria-hidden="true">
+            <span className="h-px flex-1 bg-fg/25" />
+            <span className="text-accent">+</span>
+            <span className="h-px flex-1 bg-fg/25" />
           </div>
-          <div>
-            <p className="mb-3 text-[12px] lowercase text-fg/40">next</p>
-            <WorkTile work={next} figureClassName="aspect-square" />
-          </div>
-        </nav>
-      </section>
+          <h2
+            id="similar-works-heading"
+            className="mt-8 text-sm font-semibold lowercase tracking-wide text-fg/55"
+          >
+            similar works
+          </h2>
+          {work.diagnosis ? (
+            <p className="mt-2 text-[12px] text-fg/40">{work.diagnosis}</p>
+          ) : null}
+          <nav className="mt-8 grid gap-10 sm:grid-cols-2">
+            {related.map((item, i) => (
+              <WorkTile
+                key={item.slug}
+                work={item}
+                figureClassName={i % 2 === 0 ? "aspect-[4/5]" : "aspect-square"}
+              />
+            ))}
+          </nav>
+        </section>
+      ) : null}
       <div className="mt-12">
         <PageIndex n={plate} of={String(works.length).padStart(2, "0")} />
       </div>
