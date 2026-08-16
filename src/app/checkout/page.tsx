@@ -36,7 +36,7 @@ export default function CheckoutPage() {
     if (!response.ok || !data.clientSecret) {
       const message =
         data.error ??
-        "Checkout is not live yet. Write through the contact form if you want a work held.";
+        "Checkout isn’t configured on the server yet. Write through the contact form if you want a work held.";
       setError(message);
       throw new Error(message);
     }
@@ -66,7 +66,7 @@ export default function CheckoutPage() {
         <div className="mt-16 max-w-xl text-sm leading-7 text-fg/70">
           <p>
             {error ??
-              "Checkout is ready on this site. Add your Stripe keys to .env.local to take payment, or write through the contact form if you want a work held today."}
+              "Checkout isn’t configured on the server yet. Write through the contact form if you want a work held today."}
           </p>
           <p className="mt-6">
             <Link href="/contact" className="text-accent">

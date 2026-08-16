@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Checkout is not live yet. Write through the contact form if you want a work held.",
+          "Checkout isn’t configured on the server yet. Write through the contact form if you want a work held.",
       },
       { status: 503 },
     );
