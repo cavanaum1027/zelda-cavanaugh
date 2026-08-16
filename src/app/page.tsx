@@ -35,15 +35,15 @@ export default function Home() {
         {hero ? (
           <Link
             href={`/work/${hero.slug}`}
-            className="relative mt-12 block h-[42vh] min-h-[280px] w-[min(92%,540px)] md:absolute md:bottom-0 md:right-0 md:mt-0 md:h-[72%] md:w-[52%] md:min-h-0"
+            className="relative mt-12 block aspect-square w-[min(72%,22rem)] md:absolute md:bottom-16 md:right-12 md:mt-0 md:w-[min(32vw,24rem)]"
           >
             <Image
               src={hero.image}
               alt={hero.title}
               fill
               priority
-              sizes="55vw"
-              className="object-cover object-[70%_20%] grayscale contrast-125"
+              sizes="(min-width: 768px) 32vw, 70vw"
+              className="object-cover object-[center_20%] grayscale contrast-125"
             />
           </Link>
         ) : null}
@@ -61,7 +61,7 @@ export default function Home() {
         <PlusRule className="absolute left-5 top-24 hidden md:flex md:left-8" />
         <div className="relative grid items-center gap-16 lg:grid-cols-12">
           {hero ? (
-            <div className="frame relative mx-auto aspect-[9/19] w-[220px] lg:col-span-4 lg:mx-0 lg:w-[260px]">
+            <div className="frame relative mx-auto aspect-square w-[220px] lg:col-span-4 lg:mx-0 lg:w-[260px]">
               <Image
                 src={(getWork("toska") ?? hero).image}
                 alt="Selected work"
@@ -127,7 +127,7 @@ export default function Home() {
               key={work.slug}
               work={work}
               priority={index < 2}
-              figureClassName={index === 0 ? "aspect-[4/5]" : "aspect-square"}
+              figureClassName="aspect-square"
             />
           ))}
         </div>
