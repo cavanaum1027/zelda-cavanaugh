@@ -16,7 +16,7 @@ export default function PressPage() {
 
       <header className="relative mt-8 max-w-xl">
         <h1 className="text-5xl font-extrabold tracking-tight md:text-6xl">Press</h1>
-        <p className="mt-5 text-sm leading-7 text-white/55">
+        <p className="mt-5 text-sm leading-7 text-fg/55">
           A new visual language — and a reminder that the core of creativity
           remains distinctly human.
         </p>
@@ -24,7 +24,7 @@ export default function PressPage() {
 
       <section className="relative mt-16 space-y-16">
         {press.map((item) => (
-          <div key={item.href} className="max-w-4xl border-t border-white/10 pt-10">
+          <div key={item.href} className="max-w-4xl border-t border-fg/10 pt-10">
             <PressQuote item={item} />
           </div>
         ))}

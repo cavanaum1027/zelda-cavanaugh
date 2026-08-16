@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Fraunces, Outfit } from "next/font/google";
+import { CartProvider } from "@/components/CartProvider";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import "./globals.css";
 
 const sans = Outfit({
   variable: "--font-sans",
+  subsets: ["latin"],
+});
+
+const serif = Fraunces({
+  variable: "--font-display",
   subsets: ["latin"],
 });
 
@@ -27,11 +33,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${sans.variable} h-full`}>
-      <body className="min-h-full bg-black font-sans text-white">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+    <html lang="en" className={`${sans.variable} ${serif.variable} h-full`}>
+      <body className="min-h-full bg-bg font-sans text-fg">
+        <CartProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </CartProvider>
       </body>
     </html>
   );

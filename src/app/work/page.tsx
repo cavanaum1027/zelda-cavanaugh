@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
 import { WorkTile } from "@/components/WorkTile";
 import { works } from "@/data/works";
@@ -15,9 +16,14 @@ export default function WorkPage() {
       <OutlineNum className="absolute -right-4 top-16 text-[32vw] md:text-[16rem]">02</OutlineNum>
       <header className="relative mt-8 max-w-xl">
         <h1 className="text-5xl font-extrabold tracking-tight md:text-6xl">Work</h1>
-        <p className="mt-5 text-sm leading-7 text-white/55">
+        <p className="mt-5 text-sm leading-7 text-fg/55">
           Original canvases finished with gold leaf and a suture learned in the
           funeral industry. The embroidered originals are never reproduced on canvas.
+        </p>
+        <p className="mt-5">
+          <Link href="/faq" className="text-sm lowercase text-accent">
+            + faq — originals, prints, shipping, commissions
+          </Link>
         </p>
       </header>
       <section className="relative mt-16 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">

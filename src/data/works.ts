@@ -86,7 +86,6 @@ export const works: Work[] = [
     title: "Medicine",
     price: 600,
     image: sq("55075eeb-d474-456b-ba92-e260cb219b0d", "IMG_4710.jpeg"),
-    featured: true,
   },
   {
     slug: "immarcescible",
@@ -463,7 +462,6 @@ export const works: Work[] = [
     title: "Suture",
     price: 300,
     image: sq("1696578956727-75771ZMOX775FRDOGUNH", "IMG_8194.png"),
-    featured: true,
     description:
       "The hand closes the wound. Printed on canvas, then sewn using a technique learned in the funeral industry.",
   },
@@ -698,8 +696,4 @@ export function formatPrice(price: number) {
     currency: "USD",
     minimumFractionDigits: 0,
   }).format(price);
-}
-
-export function shopUrl(slug: string) {
-  return `https://www.zeldacavanaugh.com/shop/p/${slug}`;
 }

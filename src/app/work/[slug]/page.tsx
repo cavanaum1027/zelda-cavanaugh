@@ -3,8 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
+import { AddToCart } from "@/components/AddToCart";
 import { WorkTile } from "@/components/WorkTile";
-import { formatPrice, getWork, shopUrl, works } from "@/data/works";
+import { formatPrice, getWork, works } from "@/data/works";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -53,7 +54,7 @@ export default async function WorkDetailPage({ params }: Props) {
           />
         </div>
         <div className="lg:col-span-5 lg:col-start-8 lg:pt-8">
-          <p className="text-[12px] text-white/45">
+          <p className="text-[12px] text-fg/45">
             {plate} / {String(works.length).padStart(2, "0")}
           </p>
           <h1 className="mt-3 text-5xl font-extrabold tracking-tight">{work.title}</h1>
@@ -63,28 +64,24 @@ export default async function WorkDetailPage({ params }: Props) {
           </p>
           {work.quote ? (
             <blockquote className="mt-8 max-w-sm">
-              <p className="text-[15px] leading-7 text-white/80">“{work.quote}”</p>
+              <p className="text-[15px] leading-7 text-fg/80">“{work.quote}”</p>
               {work.attribution ? (
-                <cite className="mt-3 block text-[12px] not-italic text-white/40">
+                <cite className="mt-3 block text-[12px] not-italic text-fg/40">
                   — {work.attribution}
                 </cite>
               ) : null}
             </blockquote>
           ) : null}
-          <p className="mt-8 max-w-sm text-sm leading-7 text-white/55">{description}</p>
-          <p className="mt-4 text-[12px] text-white/40">
+          <p className="mt-8 max-w-sm text-sm leading-7 text-fg/55">{description}</p>
+          <p className="mt-4 text-[12px] text-fg/40">
             {work.diagnosis ?? "Original work"}
             {work.size ? ` · ${work.size}` : ""}
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            {!work.soldOut ? (
-              <a href={shopUrl(work.slug)} className="pill">
-                Purchase
-              </a>
-            ) : null}
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <AddToCart slug={work.slug} soldOut={work.soldOut} />
             <Link
               href={`/contact?work=${encodeURIComponent(work.title)}`}
-              className="inline-flex items-center text-sm lowercase text-white/70 hover:text-accent"
+              className="inline-flex items-center text-sm lowercase text-fg/70 hover:text-accent"
             >
               + inquire
             </Link>

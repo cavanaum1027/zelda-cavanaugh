@@ -14,7 +14,7 @@ export function WorkTile({
   priority?: boolean;
 }) {
   return (
-    <Link href={`/work/${work.slug}`} className={`group block text-white hover:text-white ${className}`}>
+    <Link href={`/work/${work.slug}`} className={`group block text-fg hover:text-fg ${className}`}>
       <span className={`frame relative block ${figureClassName}`}>
         <Image
           src={work.image}
@@ -27,7 +27,7 @@ export function WorkTile({
       </span>
       <span className="mt-3 flex items-baseline justify-between gap-3 text-[13px]">
         <span>{work.title}</span>
-        <span className="text-white/45">
+        <span className="text-fg/45">
           {work.soldOut ? "sold" : formatPrice(work.price)}
         </span>
       </span>

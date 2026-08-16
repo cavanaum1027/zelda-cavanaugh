@@ -4,6 +4,7 @@ export const nav = [
   { href: "/press", label: "Press" },
   { href: "/research", label: "Research" },
   { href: "/about", label: "About" },
+  { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -146,17 +147,45 @@ export const research = [
     kicker: "Product research",
     body: "Moodl.y connects with the way we naturally think and understand. It helps you better understand yourself and communicate your emotions by transforming feelings into visual expressions. Since the brain processes images faster than words, Moodl.y makes it easier to grasp and reflect on your emotional state. AI-driven personalization ensures each moment is uniquely yours.",
     note: "Completed during graduate work in Information Design & Strategy at Northwestern, with user research and a finished prototype.",
+    href: "https://www.canva.com/design/DAGhF4rVhdY/ydoVyqFc2p-S5Oikx4mhrQ/view",
+    links: [
+      {
+        label: "Pitch deck",
+        href: "https://www.canva.com/design/DAGhF4rVhdY/ydoVyqFc2p-S5Oikx4mhrQ/view",
+      },
+      {
+        label: "Research",
+        href: "https://docs.google.com/document/d/1xVUrgJigq4xxju_tkZe_JswdrYEsxGvMqSnHjC6dRDI/edit",
+      },
+    ],
   },
   {
     title: "Systems Thinking & AI",
     kicker: "Practice",
     body: "Systems Thinking & AI bridges traditional problem-solving and the interconnected nature of the modern world. Integrating systems thinking with AI-driven methods lets organizations move beyond linear processes and create adaptive, scalable solutions — from industrial-era efficiency to knowledge-era intelligence.",
+    href: "https://www.canva.com/design/DAGYeALzuz0/p-BAhu3j-wKS7dzIbex6kA/view",
+    links: [
+      {
+        label: "Presentation deck",
+        href: "https://www.canva.com/design/DAGYeALzuz0/p-BAhu3j-wKS7dzIbex6kA/view",
+      },
+      {
+        label: "Research",
+        href: "https://docs.google.com/document/d/1usH6cKi-38U7kVymsJGLoX4Uyfhuk2Xo9fqJ393T4NY/edit?usp=sharing",
+      },
+    ],
   },
   {
     title: "Field Notes",
     kicker: "Writing",
     href: "https://michellecavanaugh.substack.com/",
     body: "Field Notes is a repository for the rough drafts and the half-life of digital thought. The canvas only shows the final output, but the real story is in the breakdown of the systems beneath it. These essays dive into why companies are terrified of artificial intelligence, what happens when machines take dancing lessons, and why the supercomputer still doesn't know what the consultants do all day. Bureaucracy with an attitude problem, written from the studio floor.",
+    links: [
+      {
+        label: "Open Field Notes",
+        href: "https://michellecavanaugh.substack.com/",
+      },
+    ],
   },
 ];
 
@@ -171,15 +200,19 @@ export const faqs = [
   },
   {
     q: "Can I purchase original artwork?",
-    a: "Yes. Available originals are listed under Work. If you are interested in a piece that is not listed, write through the contact form.",
+    a: "Yes. Available originals are listed under Work. Add a canvas to the cart and pay on this site — shipping address is collected at checkout. If you are interested in a piece that is not listed, write through the contact form.",
   },
   {
     q: "What are your payment terms?",
-    a: "All work is sold at full price, paid in full before shipping. Installment plans are not offered.",
+    a: "All work is sold at full price, paid in full on this site before shipping. Installment plans are not offered.",
   },
   {
     q: "What shipping options do you offer?",
     a: "Shipping is calculated from the buyer’s location. Most items ship via UPS.",
+  },
+  {
+    q: "What is your return policy?",
+    a: "Returns within 30 days, original condition and packaging. Custom orders cannot be returned. Damaged or incorrect items: write immediately so I can make it right.",
   },
   {
     q: "Do you accept wholesale from consultants and interior designers?",

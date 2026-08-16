@@ -15,7 +15,7 @@ export default function ResearchPage() {
 
       <header className="relative mt-8 max-w-xl">
         <h1 className="text-5xl font-extrabold tracking-tight md:text-6xl">Research</h1>
-        <p className="mt-5 text-sm leading-7 text-white/55">
+        <p className="mt-5 text-sm leading-7 text-fg/55">
           The canvas only shows the final output. The real story is in the systems
           beneath it — product, perception, and the half-life of digital thought.
         </p>
@@ -23,24 +23,36 @@ export default function ResearchPage() {
 
       <section className="relative mt-16 space-y-16">
         {research.map((item) => (
-          <article key={item.title} className="grid gap-4 border-t border-white/10 pt-10 md:grid-cols-12">
-            <p className="text-[12px] text-white/40 md:col-span-3">{item.kicker}</p>
+          <article key={item.title} className="grid gap-4 border-t border-fg/10 pt-10 md:grid-cols-12">
+            <p className="text-[12px] text-fg/40 md:col-span-3">{item.kicker}</p>
             <div className="md:col-span-8">
-              <h2 className="text-3xl font-bold md:text-4xl">{item.title}</h2>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-white/55">{item.body}</p>
-              {"note" in item && item.note ? (
-                <p className="mt-4 text-sm text-white/40">{item.note}</p>
-              ) : null}
-              {item.href ? (
+              <h2 className="text-3xl font-bold md:text-4xl">
                 <a
                   href={item.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-6 inline-block text-sm text-accent"
+                  className="text-fg"
                 >
-                  + Field Notes
+                  {item.title}
                 </a>
+              </h2>
+              <p className="mt-5 max-w-xl text-sm leading-7 text-fg/55">{item.body}</p>
+              {"note" in item && item.note ? (
+                <p className="mt-4 text-sm text-fg/40">{item.note}</p>
               ) : null}
+              <p className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+                {item.links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm lowercase text-accent"
+                  >
+                    + {link.label.toLowerCase()}
+                  </a>
+                ))}
+              </p>
             </div>
           </article>
         ))}

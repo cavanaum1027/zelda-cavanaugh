@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { CartButton } from "@/components/CartButton";
 import { nav } from "@/data/site";
 
 export function Header() {
@@ -12,11 +13,11 @@ export function Header() {
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
       <div className="pointer-events-auto flex items-start justify-between px-5 py-5 md:px-8 lg:px-10">
-        <Link href="/" className="tracked text-white hover:text-accent">
+        <Link href="/" className="tracked text-fg hover:text-accent">
           Zelda Cavanaugh
         </Link>
 
-        <nav className="hidden items-center gap-5 text-[13px] lowercase text-white/80 lg:flex">
+        <nav className="hidden items-center gap-5 text-[13px] lowercase text-fg/80 lg:flex">
           {nav.map((item) => {
             const active =
               pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -24,7 +25,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={active ? "text-accent" : "hover:text-white"}
+                className={active ? "text-accent" : "hover:text-fg"}
               >
                 {item.label.toLowerCase()}
               </Link>
@@ -32,18 +33,21 @@ export function Header() {
           })}
         </nav>
 
-        <button
-          type="button"
-          className="text-[13px] lowercase lg:hidden"
-          aria-expanded={open}
-          onClick={() => setOpen((value) => !value)}
-        >
-          {open ? "close" : "menu"}
-        </button>
+        <div className="flex items-center gap-5">
+          <CartButton />
+          <button
+            type="button"
+            className="text-[13px] lowercase lg:hidden"
+            aria-expanded={open}
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? "close" : "menu"}
+          </button>
+        </div>
       </div>
 
       {open ? (
-        <div className="pointer-events-auto border-t border-white/10 bg-black px-5 py-6 lg:hidden">
+        <div className="pointer-events-auto border-t border-fg/10 bg-bg px-5 py-6 lg:hidden">
           <nav className="flex flex-col gap-3 text-lg lowercase">
             {nav.map((item) => (
               <Link

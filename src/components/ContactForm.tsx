@@ -38,20 +38,20 @@ export function ContactForm() {
   }
 
   const field =
-    "mt-2 w-full border-b border-white/20 bg-transparent py-2 text-lg outline-none focus:border-accent";
+    "mt-2 w-full border-b border-fg/20 bg-transparent py-2 text-lg outline-none focus:border-accent";
 
   return (
     <form onSubmit={onSubmit} className="space-y-7">
       <label className="block">
-        <span className="text-[12px] text-white/45">Name</span>
+        <span className="text-[12px] text-fg/45">Name</span>
         <input required name="name" className={field} />
       </label>
       <label className="block">
-        <span className="text-[12px] text-white/45">Email</span>
+        <span className="text-[12px] text-fg/45">Email</span>
         <input required type="email" name="email" className={field} />
       </label>
       <label className="block">
-        <span className="text-[12px] text-white/45">Subject</span>
+        <span className="text-[12px] text-fg/45">Subject</span>
         <input
           name="subject"
           defaultValue={work ? `Inquiry: ${work}` : "Inquiry"}
@@ -59,7 +59,7 @@ export function ContactForm() {
         />
       </label>
       <label className="block">
-        <span className="text-[12px] text-white/45">Message</span>
+        <span className="text-[12px] text-fg/45">Message</span>
         <textarea required name="message" rows={6} defaultValue={defaultMessage} className={field} />
       </label>
       <button type="submit" className="pill">

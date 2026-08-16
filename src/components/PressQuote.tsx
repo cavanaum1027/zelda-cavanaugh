@@ -24,12 +24,12 @@ export function PressQuote({
         href={item.href}
         target="_blank"
         rel="noreferrer"
-        className="group block text-white hover:text-white"
+        className="group block text-fg hover:text-fg"
       >
         <p className={`${quoteClass} underline-offset-4 group-hover:underline`}>
           “{item.quote}”
         </p>
-        <footer className="mt-4 text-[12px] text-white/45">
+        <footer className="mt-4 text-[12px] text-fg/45">
           {item.source} · {item.detail}
         </footer>
         <span className="mt-3 inline-block text-sm lowercase text-accent">
