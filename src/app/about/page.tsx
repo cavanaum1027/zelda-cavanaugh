@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
+import { practice, processSteps } from "@/data/site";
 import { getWork } from "@/data/works";
 
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "Zelda Cavanaugh grew up around a family-owned funeral home in Pennsylvania. She still works in product. The studio uses the same habits.",
+  description: practice.hero,
 };
 
 const credentials = [
@@ -57,31 +57,29 @@ export default function AboutPage() {
 
         <article className="max-w-xl text-[16px] leading-8 text-fg/80 lg:col-span-6 lg:col-start-7">
           <h1 className="text-5xl font-extrabold tracking-tight text-fg">About</h1>
-
-          <p className="mt-10">
-            I grew up in Pennsylvania around a family-owned funeral home. I was
-            not born in one. The distinction is boring and it is also accurate.
-            The work was simply there: restorative arts, sewing, grief
-            counseling. You see grief without the polite version. It strips
-            things down. It also made the psyche interesting, enough that
-            psychiatric nursing seemed like the next move.
-          </p>
-          <p className="mt-6">
-            It wasn’t. I studied English at the University of Central Florida,
-            concentrating in Technical Communications, and received the Stuart
-            Oman’s Award for Excellence. The work after that was product,
-            starting at IBM and continuing through Verizon, Walmart, and Disney.
-            I still work in product. I take something dense and make it
-            something a person can actually use.
-          </p>
-          <p className="mt-6">
-            The studio keeps that job going. I start with a diagnosis from the
-            DSM-5, give it a persona, and talk until the clinical language
-            starts to behave. Then the generative tools, then a suture I learned
-            in that funeral home, then gold leaf.
-          </p>
+          <p className="mt-10">{practice.hero}</p>
+          <p className="mt-6">{practice.intro}</p>
+          <blockquote className="mt-8 font-serif text-[1.65rem] leading-[1.25] text-fg md:text-[2.15rem] md:leading-[1.2]">
+            “{practice.quote}”
+          </blockquote>
+          <p className="mt-8">{practice.close}</p>
         </article>
       </div>
+
+      <section className="relative mt-24 max-w-3xl">
+        <p className="tracked text-gold">The process</p>
+        <ol className="thread mt-8 space-y-9">
+          {processSteps.map((step) => (
+            <li key={step.number} className="thread-node">
+              <p className="text-[12px] text-fg/40">
+                {step.number} — {step.title}
+              </p>
+              <p className="mt-1 font-serif text-xl">{step.kicker}</p>
+              <p className="mt-2 max-w-xl text-sm leading-6 text-fg/55">{step.body}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       <section className="relative mt-24 max-w-4xl">
         <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl">Education</h2>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { exhibitions, processSteps } from "@/data/site";
+import { exhibitions, practice, processSteps } from "@/data/site";
 import { getWork } from "@/data/works";
 import { WorkTile } from "@/components/WorkTile";
 
@@ -55,9 +55,7 @@ export default function Home() {
             The emotional interior, rendered.
           </p>
           <p className="mt-5 max-w-md text-[15px] leading-7 text-fg/55">
-            I investigate how generative systems approximate human emotion.
-            Informed by the DSM-5, neuroscience, and a needle threaded with
-            embroidery floss.
+            {practice.hero}
           </p>
         </div>
 
@@ -87,22 +85,11 @@ export default function Home() {
       <section className="mt-28 max-w-3xl lg:mt-36">
         <Chapter n="02" label="Practice" />
         <div className="mt-10 space-y-8 text-[17px] leading-8 text-fg/80 md:text-[18px] md:leading-9">
-          <p>
-            Each work begins with a clinical question: how does a diagnostic
-            framework — the DSM-5 — translate into visual form when filtered
-            through a generative system? The research sits at the intersection of
-            psychology, machine perception, and the limits of language.
-          </p>
+          <p>{practice.intro}</p>
           <blockquote className="font-serif text-[1.65rem] leading-[1.25] text-fg md:text-[2.15rem] md:leading-[1.2]">
-            “Abstraction as an entry point for machines to approximate emotional
-            nuance.”
+            “{practice.quote}”
           </blockquote>
-          <p>
-            The works are not illustrations of mental illness. They are studies in
-            translation — what is gained and lost when psychological experience
-            moves from clinical text, through algorithmic interpretation, and into
-            hand-stitched image.
-          </p>
+          <p>{practice.close}</p>
         </div>
 
         <p className="tracked mt-16 text-gold">The process</p>

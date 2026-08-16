@@ -16,6 +16,16 @@ export const social = {
     "https://www.contemporaryartcuratormagazine.com/home-2/zelda-cavanaugh-interview",
 };
 
+export const practice = {
+  hero: "I investigate how generative systems approximate human emotion. Informed by the DSM-5, neuroscience, and a needle threaded with embroidery floss.",
+  intro:
+    "Each work begins with a clinical question: how does a diagnostic framework — the DSM-5 — translate into visual form when filtered through a generative system? The research sits at the intersection of psychology, machine perception, and the limits of language.",
+  quote:
+    "Abstraction as an entry point for machines to approximate emotional nuance.",
+  close:
+    "The works are not illustrations of mental illness. They are studies in translation — what is gained and lost when psychological experience moves from clinical text, through algorithmic interpretation, and into hand-stitched image.",
+};
+
 export const processSteps = [
   {
     number: "01",
