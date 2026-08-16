@@ -695,6 +695,7 @@ function diagnosisTags(diagnosis?: string) {
   if (/adjustment/.test(n)) tags.push("Adjustment Disorders");
   if (/bereavement|grief|ghost sickness/.test(n)) tags.push("Grief");
   if (/dysthymic|depress/.test(n)) tags.push("Depression");
+  if (/^recovery$/i.test(n)) return [];
   return [...new Set(tags)];
 }
 

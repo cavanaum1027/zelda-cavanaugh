@@ -52,7 +52,7 @@ export default async function WorkDetailPage({ params }: Props) {
             {work.soldOut ? <span className="ml-3 text-accent">Sold</span> : null}
           </p>
           {work.quote ? (
-            <blockquote className="mt-8 max-w-sm">
+            <blockquote className="mt-8 max-w-prose">
               <p className="text-[15px] leading-7 text-fg/80">“{work.quote}”</p>
               {work.attribution ? (
                 <cite className="mt-3 block text-[12px] not-italic text-fg/40">
@@ -67,10 +67,11 @@ export default async function WorkDetailPage({ params }: Props) {
           {work.print ? (
             <p className="mt-6 max-w-prose text-sm leading-7 text-fg/45">{gicleeNote}</p>
           ) : null}
-          <p className="mt-4 text-[12px] text-fg/40">
-            {work.diagnosis ?? (work.print ? "Giclée print" : "Original work")}
-            {work.size ? ` · ${work.size}` : ""}
-          </p>
+          {work.diagnosis || work.size ? (
+            <p className="mt-4 text-[12px] text-fg/40">
+              {[work.diagnosis, work.size].filter(Boolean).join(" · ")}
+            </p>
+          ) : null}
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <AddToCart slug={work.slug} soldOut={work.soldOut} />
             <Link
