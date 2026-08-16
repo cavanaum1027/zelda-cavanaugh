@@ -7,21 +7,20 @@ import { getWork } from "@/data/works";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Zelda Cavanaugh was born in a family-owned funeral home in Pennsylvania. She still works in product. The studio continues the same question.",
+    "Zelda Cavanaugh grew up around a family-owned funeral home in Pennsylvania. She still works in product. The studio uses the same habits.",
 };
 
 const credentials = [
   {
     school: "University of Central Florida",
     degree: "B.A. English, Technical Communications",
-    context:
-      "The first formal training in making dense language usable. Recipient of the Stuart Oman’s Award for Excellence.",
+    context: "How to make dense language usable.",
   },
   {
     school: "Northwestern University",
     degree: "M.S. Information Design & Strategy",
     context:
-      "Completed. How information is structured, perceived, and received — the graduate work that sits under both the product practice and the studio.",
+      "Completed. How information is structured, and how people actually receive it.",
   },
   {
     school: "Cornell University",
@@ -32,7 +31,7 @@ const credentials = [
 ];
 
 export default function AboutPage() {
-  const piece = getWork("ophelia");
+  const piece = getWork("dolorifuge");
 
   return (
     <div className="relative overflow-hidden px-5 pb-8 pt-28 md:px-8 lg:px-10">
@@ -51,7 +50,7 @@ export default function AboutPage() {
               fill
               priority
               sizes="(min-width: 1024px) 40vw, 100vw"
-              className="object-cover object-[45%_20%]"
+              className="object-cover object-[50%_22%]"
             />
           </Link>
         ) : null}
@@ -60,27 +59,26 @@ export default function AboutPage() {
           <h1 className="text-5xl font-extrabold tracking-tight text-fg">About</h1>
 
           <p className="mt-10">
-            I was born in Pennsylvania, in a family-owned funeral home. That was
-            the first training: embalming, restorative arts, floral arrangement,
-            sewing, lighting, and grief counseling. You see grief up close and
-            unfiltered. It strips things down. It also pulled me toward the
-            psyche — first toward psychiatric nursing.
+            I grew up in Pennsylvania around a family-owned funeral home. I was
+            not born in one. The distinction is boring and it is also accurate.
+            The work was simply there: restorative arts, sewing, grief
+            counseling. You see grief without the polite version. It strips
+            things down. It also made the psyche interesting, enough that
+            psychiatric nursing seemed like the next move.
           </p>
           <p className="mt-6">
-            The path bent. I studied English, concentrating in Technical
-            Communications, and received the Stuart Oman’s Award for Excellence.
-            The work that followed started at IBM and continued through Verizon,
-            Walmart, and Disney. I still work in product. The job is the same
-            question in a different room: take something complex and make it
-            something a person can use, understand, hold.
+            It wasn’t. I studied English at the University of Central Florida,
+            concentrating in Technical Communications, and received the Stuart
+            Oman’s Award for Excellence. The work after that was product,
+            starting at IBM and continuing through Verizon, Walmart, and Disney.
+            I still work in product. I take something dense and make it
+            something a person can actually use.
           </p>
           <p className="mt-6">
-            The studio continues that question. I start with a diagnosis from
-            the DSM-5, give it a persona, and talk until the clinical language
-            has a pulse. Then the image, then the needle, then gold leaf. The
-            Circle of Fifths sits under the composition the way a song sits
-            under a scene. Beauty and disfigurement in the same frame. The
-            machine is a tool. The meaning is mine.
+            The studio keeps that job going. I start with a diagnosis from the
+            DSM-5, give it a persona, and talk until the clinical language
+            starts to behave. Then the generative tools, then a suture I learned
+            in that funeral home, then gold leaf.
           </p>
         </article>
       </div>
@@ -88,16 +86,8 @@ export default function AboutPage() {
       <section className="relative mt-24 max-w-4xl">
         <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl">Education</h2>
         <p className="mt-6 max-w-2xl text-[16px] leading-8 text-fg/80">
-          Technical communications came first: how to make language exact without
-          killing it. Product work put that training against real systems —
-          interfaces, constraints, and later the generative tools that now enter
-          the studio. The graduate work at Northwestern was information design
-          and strategy: how people actually receive complexity. Cornell was
-          product management — how a thing is built, sequenced, and shipped.
-        </p>
-        <p className="mt-5 max-w-2xl text-[16px] leading-8 text-fg/80">
-          The degrees are complete. They sit in the practice the way the funeral
-          training does: not as ornament, but as method.
+          These are finished. The master’s at Northwestern and the product
+          management certificate at Cornell are complete. I am not in school.
         </p>
 
         <ol className="mt-14">
