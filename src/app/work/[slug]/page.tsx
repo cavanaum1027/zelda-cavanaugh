@@ -83,10 +83,30 @@ export default async function WorkDetailPage({ params }: Props) {
           </div>
         </div>
       </div>
-      <nav className="mt-24 grid gap-8 sm:grid-cols-2">
-        <WorkTile work={prev} figureClassName="aspect-[4/5]" />
-        <WorkTile work={next} figureClassName="aspect-square" />
-      </nav>
+
+      <section aria-labelledby="other-work-heading" className="relative mt-24">
+        <div className="flex items-center gap-4" aria-hidden="true">
+          <span className="h-px flex-1 bg-fg/25" />
+          <span className="text-accent">+</span>
+          <span className="h-px flex-1 bg-fg/25" />
+        </div>
+        <h2
+          id="other-work-heading"
+          className="mt-8 text-sm font-semibold lowercase tracking-wide text-fg/55"
+        >
+          other work
+        </h2>
+        <nav className="mt-8 grid gap-10 sm:grid-cols-2">
+          <div>
+            <p className="mb-3 text-[12px] lowercase text-fg/40">previous</p>
+            <WorkTile work={prev} figureClassName="aspect-[4/5]" />
+          </div>
+          <div>
+            <p className="mb-3 text-[12px] lowercase text-fg/40">next</p>
+            <WorkTile work={next} figureClassName="aspect-square" />
+          </div>
+        </nav>
+      </section>
       <div className="mt-12">
         <PageIndex n={plate} of={String(works.length).padStart(2, "0")} />
       </div>
