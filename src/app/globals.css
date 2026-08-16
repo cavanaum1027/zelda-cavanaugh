@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #000000;
+  --bg-2: #141414;
+  --fg: #ffffff;
+  --muted: rgba(255, 255, 255, 0.55);
+  --line: rgba(255, 255, 255, 0.22);
+  --accent: #ff4f8b;
+  --stroke: rgba(255, 255, 255, 0.16);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: #000;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+.tracked {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.outline-num {
+  color: transparent;
+  -webkit-text-stroke: 1.4px var(--stroke);
+  font-weight: 800;
+  line-height: 0.75;
+  letter-spacing: -0.06em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.frame {
+  border: 1px solid var(--line);
+  border-radius: 1.75rem;
+  overflow: hidden;
+  background: #0b0b0b;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.85rem 1.6rem;
+}
+
+.pill:hover {
+  color: #000;
+  background: var(--accent);
+}
+
+.glow {
+  background: radial-gradient(ellipse at 80% 0%, rgba(255, 255, 255, 0.07), transparent 55%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
