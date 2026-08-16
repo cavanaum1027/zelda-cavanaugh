@@ -1,5 +1,10 @@
 import Stripe from "stripe";
 
+function readEnv(name: string) {
+  // Dynamic lookup so Next.js cannot inline an empty NEXT_PUBLIC_ value at build time.
+  return process.env[name];
+}
+
 function isUsableSecret(value?: string) {
   return Boolean(
     (value?.startsWith("sk_test_") || value?.startsWith("sk_live_")) &&
@@ -18,17 +23,40 @@ function isUsablePublishable(value?: string) {
   );
 }
 
+export function stripeKeyStatus() {
+  return {
+    secret: isUsableSecret(readEnv("STRIPE_SECRET_KEY")),
+    publishable: Boolean(getPublishableKey()),
+  };
+}
+
+export function logStripeKeyStatus(source: string) {
+  const status = stripeKeyStatus();
+  console.info("[stripe] keys present", {
+    source,
+    secret: status.secret ? "yes" : "no",
+    publishable: status.publishable ? "yes" : "no",
+  });
+  return status;
+}
+
+export function getPublishableKey() {
+  const value =
+    readEnv("STRIPE_PUBLISHABLE_KEY") ||
+    readEnv("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY") ||
+    "";
+  return isUsablePublishable(value) ? value : "";
+}
+
 export function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
+  const key = readEnv("STRIPE_SECRET_KEY");
   if (!isUsableSecret(key)) return null;
   return new Stripe(key as string);
 }
 
 export function stripeConfigured() {
-  return (
-    isUsableSecret(process.env.STRIPE_SECRET_KEY) &&
-    isUsablePublishable(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
-  );
+  const status = stripeKeyStatus();
+  return status.secret && status.publishable;
 }
 
 export function stripeTaxEnabled() {

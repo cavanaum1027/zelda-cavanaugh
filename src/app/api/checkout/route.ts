@@ -8,28 +8,33 @@ import {
   SHIPPING_COUNTRIES,
   SHIPPING_LABEL,
 } from "@/lib/commerce";
-import { getStripe, siteOrigin, stripeConfigured, stripeTaxEnabled } from "@/lib/stripe";
+import {
+  getPublishableKey,
+  getStripe,
+  logStripeKeyStatus,
+  siteOrigin,
+  stripeTaxEnabled,
+} from "@/lib/stripe";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 type Payload = {
   items?: { slug?: string; quantity?: number }[];
 };
 
 export async function POST(request: Request) {
-  if (!stripeConfigured()) {
+  const keys = logStripeKeyStatus("api/checkout");
+  const stripe = getStripe();
+  if (!stripe || !keys.publishable) {
     return NextResponse.json(
       {
         error:
           "Checkout isn’t configured on the server yet. Write through the contact form if you want a work held.",
+        keysPresent: { secret: keys.secret, publishable: keys.publishable },
       },
       { status: 503 },
     );
-  }
-
-  const stripe = getStripe();
-  if (!stripe) {
-    return NextResponse.json({ error: "Checkout is unavailable." }, { status: 503 });
   }
 
   let body: Payload;
@@ -143,7 +148,7 @@ export async function POST(request: Request) {
         return_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       },
       {
-        idempotencyKey: `checkout:${slugs.sort().join(",")}:${Math.floor(Date.now() / 120_000)}`,
+        idempotencyKey: `checkout:${crypto.randomUUID()}`,
       },
     );
 
@@ -151,7 +156,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Checkout could not start." }, { status: 500 });
     }
 
-    return NextResponse.json({ clientSecret: session.client_secret });
+    return NextResponse.json({
+      clientSecret: session.client_secret,
+      publishableKey: getPublishableKey() || null,
+    });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Checkout failed.";
     return NextResponse.json({ error: message }, { status: 500 });

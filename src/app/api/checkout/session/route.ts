@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe";
+import { getStripe, logStripeKeyStatus } from "@/lib/stripe";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
+  logStripeKeyStatus("api/checkout/session");
   const stripe = getStripe();
   if (!stripe) {
     return NextResponse.json({ error: "Checkout is unavailable." }, { status: 503 });
