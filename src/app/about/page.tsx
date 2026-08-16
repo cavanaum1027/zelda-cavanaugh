@@ -14,19 +14,14 @@ const credentials = [
   {
     school: "University of Central Florida",
     degree: "B.A. English, Technical Communications",
-    context: "How to make dense language usable.",
   },
   {
     school: "Northwestern University",
     degree: "M.S. Information Design & Strategy",
-    context:
-      "Completed. How information is structured, and how people actually receive it.",
   },
   {
     school: "Cornell University",
     degree: "Product Management certification",
-    context:
-      "Completed. How a thing is sequenced, built, and put in front of a person.",
   },
 ];
 
@@ -83,10 +78,6 @@ export default function AboutPage() {
 
       <section className="relative mt-24 max-w-4xl">
         <h2 className="text-4xl font-extrabold tracking-tight md:text-5xl">Education</h2>
-        <p className="mt-6 max-w-2xl text-[16px] leading-8 text-fg/80">
-          These are finished. The master’s at Northwestern and the product
-          management certificate at Cornell are complete. I am not in school.
-        </p>
 
         <ol className="mt-14">
           {credentials.map((item) => (
@@ -99,7 +90,6 @@ export default function AboutPage() {
               </p>
               <div className="md:col-span-7">
                 <p className="text-xl font-semibold leading-snug">{item.degree}</p>
-                <p className="mt-3 text-sm leading-6 text-fg/55">{item.context}</p>
               </div>
             </li>
           ))}
