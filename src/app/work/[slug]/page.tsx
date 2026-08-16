@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
 import { AddToCart } from "@/components/AddToCart";
+import { WorkGallery } from "@/components/WorkGallery";
 import { WorkTile } from "@/components/WorkTile";
+import { gicleeNote } from "@/data/product-copy";
 import { formatPrice, getWork, works } from "@/data/works";
 
 type Props = {
@@ -34,25 +35,14 @@ export default async function WorkDetailPage({ params }: Props) {
   const plate = String(index + 1).padStart(2, "0");
   const prev = works[(index - 1 + works.length) % works.length];
   const next = works[(index + 1) % works.length];
-  const description =
-    work.description ??
-    `${work.size ? `${work.size}. ` : ""}Canvas with hand-generated gilding and embroidery. Gold detailing follows the Circle of Fifths — a tonal architecture related to the diagnostic criteria at the heart of the work.`;
+  const images = work.images.length ? work.images : [work.image];
 
   return (
     <article className="relative overflow-hidden px-5 pb-8 pt-28 md:px-8 lg:px-10">
       <PlusRule />
       <OutlineNum className="absolute -right-6 top-10 text-[40vw] md:text-[18rem]">{plate}</OutlineNum>
       <div className="relative mt-8 grid items-start gap-12 lg:grid-cols-12">
-        <div className="frame relative aspect-[4/5] lg:col-span-6">
-          <Image
-            src={work.image}
-            alt={work.title}
-            fill
-            priority
-            sizes="55vw"
-            className="object-cover"
-          />
-        </div>
+        <WorkGallery title={work.title} images={images} />
         <div className="lg:col-span-5 lg:col-start-8 lg:pt-8">
           <p className="text-[12px] text-fg/45">
             {plate} / {String(works.length).padStart(2, "0")}
@@ -72,9 +62,14 @@ export default async function WorkDetailPage({ params }: Props) {
               ) : null}
             </blockquote>
           ) : null}
-          <p className="mt-8 max-w-sm text-sm leading-7 text-fg/55">{description}</p>
+          {work.description ? (
+            <p className="mt-8 max-w-sm text-sm leading-7 text-fg/55">{work.description}</p>
+          ) : null}
+          {work.print ? (
+            <p className="mt-6 max-w-sm text-sm leading-7 text-fg/45">{gicleeNote}</p>
+          ) : null}
           <p className="mt-4 text-[12px] text-fg/40">
-            {work.diagnosis ?? "Original work"}
+            {work.diagnosis ?? (work.print ? "Giclée print" : "Original work")}
             {work.size ? ` · ${work.size}` : ""}
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">

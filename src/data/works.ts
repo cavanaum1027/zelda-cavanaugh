@@ -1,8 +1,12 @@
+import { productCopy } from "./product-copy";
+import { localWorkImages } from "./work-images";
+
 export type Work = {
   slug: string;
   title: string;
   price: number;
   image: string;
+  images: string[];
   soldOut?: boolean;
   featured?: boolean;
   size?: string;
@@ -10,12 +14,13 @@ export type Work = {
   quote?: string;
   attribution?: string;
   description?: string;
+  print?: boolean;
 };
 
 const sq = (id: string, file: string) =>
   `https://images.squarespace-cdn.com/content/v1/64e7d9b4dff28018353dc5f7/${id}/${file}`;
 
-export const works: Work[] = [
+const catalog: Omit<Work, "images">[] = [
   {
     slug: "beloved",
     title: "Beloved",
@@ -27,8 +32,6 @@ export const works: Work[] = [
     quote:
       "If thinking is your fate, revere this fate with divine honour and sacrifice to it the best, the most beloved",
     attribution: "Friedrich Nietzsche",
-    description:
-      "Canvas with hand-generated gilding and embroidery. Imagery reflective of the DSM-5 diagnostic criteria for Obsessive-Compulsive and Related Disorders. Gold detailing follows the Circle of Fifths — a tonal architecture mirroring the diagnosis.",
   },
   {
     slug: "nepenthe",
@@ -40,8 +43,6 @@ export const works: Work[] = [
     diagnosis: "Schizophrenia",
     quote: "The question is not what you look at, but what you see.",
     attribution: "Henry David Thoreau",
-    description:
-      "Canvas with hand-generated gilding and embroidery. Imagery reflective of the DSM-5 diagnostic criteria for Schizophrenia. Gold detailing follows the Circle of Fifths — a tonal architecture mirroring the diagnosis.",
   },
   {
     slug: "diffident",
@@ -54,8 +55,6 @@ export const works: Work[] = [
     quote:
       "…and, besides, what was left to say these days when the unspeakable was out there being spoken, exhausting all sympathy? Yet, feeling it, how difficult to keep the face's curtains closed..",
     attribution: "Stephen Dunn",
-    description:
-      "Canvas with hand-generated gilding and embroidery. Imagery reflective of the DSM-5 diagnostic criteria for Social Anxiety Disorder. Gold detailing follows the Circle of Fifths — a tonal architecture mirroring the diagnosis.",
   },
   {
     slug: "toska",
@@ -63,10 +62,6 @@ export const works: Work[] = [
     price: 700,
     image: sq("906b2ea0-a205-43af-a359-bb4d940141d9", "IMG_4765.jpg"),
     featured: true,
-    size: "Original canvas",
-    diagnosis: "Longing",
-    description:
-      "Hand-gilded and embroidered canvas. Toska is the untranslatable ache — a longing with no object, stitched until the surface holds.",
   },
   {
     slug: "awen",
@@ -462,8 +457,6 @@ export const works: Work[] = [
     title: "Suture",
     price: 300,
     image: sq("1696578956727-75771ZMOX775FRDOGUNH", "IMG_8194.png"),
-    description:
-      "The hand closes the wound. Printed on canvas, then sewn using a technique learned in the funeral industry.",
   },
   {
     slug: "hyenas",
@@ -683,6 +676,20 @@ export const works: Work[] = [
     image: sq("1697173556529-3126N4G3YEX96KGTKWMR", "IMG_8340.png"),
   },
 ];
+
+function enrich(work: Omit<Work, "images">): Work {
+  const copy = productCopy[work.slug];
+  const local = localWorkImages[work.slug];
+  const images = local?.length ? local : [work.image];
+  return {
+    ...work,
+    ...copy,
+    image: images[0] ?? work.image,
+    images,
+  };
+}
+
+export const works: Work[] = catalog.map(enrich);
 
 export const featuredWorks = works.filter((work) => work.featured);
 

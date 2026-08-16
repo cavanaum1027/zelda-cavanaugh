@@ -68,8 +68,12 @@ export async function POST(request: Request) {
         tax_behavior: taxEnabled ? ("exclusive" as const) : undefined,
         product_data: {
           name: `Zelda Cavanaugh — ${work.title}`,
-          description: work.size ?? "Original canvas",
-          images: [work.image],
+          description: work.description ?? work.size ?? "Original canvas",
+          images: [
+            work.image.startsWith("http")
+              ? work.image
+              : `${siteOrigin(request)}${work.image}`,
+          ],
           tax_code: PHYSICAL_TAX_CODE,
           metadata: { slug: work.slug },
         },
