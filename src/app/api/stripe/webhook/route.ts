@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { sendSaleEmail } from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -33,16 +34,26 @@ async function fulfill(stripe: Stripe, session: Stripe.Checkout.Session) {
   const titles =
     full.line_items?.data.map((item) => item.description).filter(Boolean) ?? [];
 
+  const shipping = shippingFrom(full);
   console.info("[stripe] payment received", {
     id: full.id,
     email: full.customer_details?.email ?? null,
-    phone: full.customer_details?.phone ?? null,
-    amount_total: full.amount_total,
-    currency: full.currency,
     slugs: full.metadata?.slugs ?? "",
     titles,
-    shipping: shippingFrom(full),
   });
+
+  const notice = await sendSaleEmail({
+    email: full.customer_details?.email ?? null,
+    phone: full.customer_details?.phone ?? null,
+    titles: titles.filter((title): title is string => Boolean(title)),
+    slugs: full.metadata?.slugs ?? "",
+    amount: full.amount_total,
+    currency: full.currency,
+    shipping,
+  });
+  if ("error" in notice) {
+    console.error("[stripe] sale email failed", notice.error);
+  }
 }
 
 export async function POST(request: Request) {

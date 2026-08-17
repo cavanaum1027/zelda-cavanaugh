@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, type Work } from "@/data/works";
+import { workImageAlt } from "@/lib/seo";
 
 export function WorkTile({
   work,
@@ -18,7 +19,7 @@ export function WorkTile({
       <span className={`frame relative block ${figureClassName}`}>
         <Image
           src={work.image}
-          alt={work.title}
+          alt={workImageAlt(work)}
           fill
           priority={priority}
           sizes="(min-width: 1024px) 40vw, 100vw"

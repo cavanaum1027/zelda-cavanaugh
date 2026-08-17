@@ -14,7 +14,7 @@ export default function CartPage() {
       <header className="mt-10 max-w-xl">
         <h1 className="font-serif text-5xl tracking-tight md:text-6xl">Cart</h1>
         <p className="mt-5 text-sm leading-7 text-fg/55">
-          Original canvases. Shipping is added at checkout.
+          Original canvases. Shipping is calculated at checkout from the destination.
         </p>
       </header>
 

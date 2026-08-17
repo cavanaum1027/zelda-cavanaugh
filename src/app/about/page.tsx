@@ -2,22 +2,26 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
-import { practice, processSteps } from "@/data/site";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import { identity, practice, processSteps } from "@/data/site";
 import { getWork } from "@/data/works";
+import { pageMeta, workImageAlt } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About",
-  description: practice.hero,
-};
+export const metadata: Metadata = pageMeta({
+  title: { absolute: "About Zelda Cavanaugh, artist" },
+  description:
+    "Zelda Cavanaugh is the studio name of Michelle Cavanaugh, an artist working with DSM-5 diagnostic language, generative systems, gold leaf, and embroidery. Education at UCF, Northwestern, and Cornell.",
+  path: "/about",
+});
 
 const credentials = [
   {
-    school: "University of Central Florida",
-    degree: "B.A. English, Technical Communications",
-  },
-  {
     school: "Northwestern University",
     degree: "M.S. Information Design & Strategy",
+  },
+  {
+    school: "University of Central Florida",
+    degree: "B.A. English, Technical Communications",
   },
   {
     school: "Cornell University",
@@ -41,7 +45,7 @@ export default function AboutPage() {
           >
             <Image
               src={piece.image}
-              alt={piece.title}
+              alt={workImageAlt(piece)}
               fill
               priority
               sizes="(min-width: 1024px) 40vw, 100vw"
@@ -51,8 +55,17 @@ export default function AboutPage() {
         ) : null}
 
         <article className="max-w-xl text-[16px] leading-8 text-fg/80 lg:col-span-6 lg:col-start-7">
-          <h1 className="text-5xl font-extrabold tracking-tight text-fg">About</h1>
-          <p className="mt-10">{practice.hero}</p>
+          <PageBreadcrumb
+            items={[
+              { name: "zelda cavanaugh", href: "/" },
+              { name: "about", href: "/about" },
+            ]}
+          />
+          <h1 className="mt-6 text-5xl font-extrabold tracking-tight text-fg">About</h1>
+          <p className="mt-8 font-serif text-[1.35rem] leading-[1.35] text-fg md:text-[1.5rem] md:leading-[1.3]">
+            {identity.statement}
+          </p>
+          <p className="mt-12 border-t border-fg/10 pt-10">{practice.hero}</p>
           <p className="mt-6">{practice.intro}</p>
           <blockquote className="mt-8 font-serif text-[1.65rem] leading-[1.25] text-fg md:text-[2.15rem] md:leading-[1.2]">
             “{practice.quote}”
@@ -67,7 +80,7 @@ export default function AboutPage() {
           {processSteps.map((step) => (
             <li key={step.number} className="thread-node">
               <p className="text-[12px] text-fg/40">
-                {step.number} — {step.title}
+                {step.number} / {step.title}
               </p>
               <p className="mt-1 font-serif text-xl">{step.kicker}</p>
               <p className="mt-2 max-w-xl text-sm leading-6 text-fg/55">{step.body}</p>

@@ -39,6 +39,7 @@ export function Header() {
             type="button"
             className="text-[13px] lowercase lg:hidden"
             aria-expanded={open}
+            aria-controls="mobile-nav"
             onClick={() => setOpen((value) => !value)}
           >
             {open ? "close" : "menu"}
@@ -48,7 +49,7 @@ export function Header() {
 
       {open ? (
         <div className="pointer-events-auto border-t border-fg/10 bg-bg px-5 py-6 lg:hidden">
-          <nav className="flex flex-col gap-3 text-lg lowercase">
+          <nav id="mobile-nav" className="flex flex-col gap-3 text-lg lowercase">
             {nav.map((item) => (
               <Link
                 key={item.href}

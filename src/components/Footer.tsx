@@ -14,16 +14,17 @@ export function Footer() {
               {item.label.toLowerCase()}
             </Link>
           ))}
+          <Link href="/privacy">privacy</Link>
         </nav>
       </div>
       <p className="flex gap-5 text-[13px] lowercase text-fg/60">
-        <a href={social.instagram} target="_blank" rel="noreferrer">
+        <Link href="/notes" className="hover:text-accent">
+          field notes
+        </Link>
+        <a href={social.instagram} target="_blank" rel="me noreferrer">
           instagram
         </a>
-        <a href={social.substack} target="_blank" rel="noreferrer">
-          field notes
-        </a>
-        <a href={social.artsy} target="_blank" rel="noreferrer">
+        <a href={social.artsy} target="_blank" rel="me noreferrer">
           artsy
         </a>
       </p>

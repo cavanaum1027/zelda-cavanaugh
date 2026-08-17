@@ -5,8 +5,10 @@ import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
 import { AddToCart } from "@/components/AddToCart";
 import { WorkGallery } from "@/components/WorkGallery";
 import { WorkTile } from "@/components/WorkTile";
+import { JsonLd } from "@/components/JsonLd";
 import { gicleeNote } from "@/data/product-copy";
 import { formatPrice, getWork, similarWorks, works } from "@/data/works";
+import { artworkJsonLd, breadcrumbJsonLd, workMeta } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -20,10 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const work = getWork(slug);
   if (!work) return { title: "Work" };
-  return {
-    title: work.title,
-    description: work.description ?? `${work.title} — original work by Zelda Cavanaugh.`,
-  };
+  return workMeta(work);
 }
 
 export default async function WorkDetailPage({ params }: Props) {
@@ -38,12 +37,31 @@ export default async function WorkDetailPage({ params }: Props) {
 
   return (
     <article className="relative overflow-hidden px-5 pb-8 pt-28 md:px-8 lg:px-10">
+      <JsonLd data={artworkJsonLd(work)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Zelda Cavanaugh", path: "/" },
+          { name: "Work", path: "/work" },
+          { name: work.title, path: `/work/${work.slug}` },
+        ])}
+      />
       <PlusRule />
       <OutlineNum className="absolute -right-6 top-10 text-[40vw] md:text-[18rem]">{plate}</OutlineNum>
       <div className="relative mt-8 grid items-start gap-12 lg:grid-cols-12">
-        <WorkGallery title={work.title} images={images} />
+        <WorkGallery work={work} images={images} />
         <div className="lg:col-span-5 lg:col-start-8 lg:pt-8">
-          <p className="text-[12px] text-fg/45">
+          <p className="text-[12px] lowercase text-fg/40">
+            <Link href="/" className="hover:text-accent">
+              zelda cavanaugh
+            </Link>
+            <span className="text-fg/25"> / </span>
+            <Link href="/work" className="hover:text-accent">
+              work
+            </Link>
+            <span className="text-fg/25"> / </span>
+            <span>{work.title}</span>
+          </p>
+          <p className="mt-3 text-[12px] text-fg/45">
             {plate} / {String(works.length).padStart(2, "0")}
           </p>
           <h1 className="mt-3 text-5xl font-extrabold tracking-tight">{work.title}</h1>
@@ -100,6 +118,12 @@ export default async function WorkDetailPage({ params }: Props) {
               </>
             )}
           </div>
+          {!work.print && !work.soldOut ? (
+            <p className="mt-4 text-[12px] text-fg/40">
+              UPS Ground. United States from $22, Canada from $38, Europe from
+              $48. Works 24 inches or larger add $12. Calculated at checkout.
+            </p>
+          ) : null}
         </div>
       </div>
 

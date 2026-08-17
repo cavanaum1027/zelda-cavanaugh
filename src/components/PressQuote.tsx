@@ -23,7 +23,7 @@ export function PressQuote({
       <a
         href={item.href}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         className="group block text-fg hover:text-fg"
       >
         <p className={`${quoteClass} underline-offset-4 group-hover:underline`}>

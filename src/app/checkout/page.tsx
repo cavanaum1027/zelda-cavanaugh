@@ -1,7 +1,7 @@
 "use client";
 
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
-import { loadStripe, type Stripe } from "@stripe/stripe-js";
+import { loadStripe, type Stripe, type StripeEmbeddedCheckoutShippingDetailsChangeEvent } from "@stripe/stripe-js";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PlusRule } from "@/components/Marks";
@@ -10,7 +10,6 @@ import { useCart } from "@/components/CartProvider";
 type CheckoutConfig = {
   configured?: boolean;
   publishableKey?: string | null;
-  keysPresent?: { secret: boolean; publishable: boolean };
 };
 
 export default function CheckoutPage() {
@@ -59,6 +58,29 @@ export default function CheckoutPage() {
     return data.clientSecret;
   }, [slugs]);
 
+  const onShippingDetailsChange = useCallback(
+    async (event: StripeEmbeddedCheckoutShippingDetailsChangeEvent) => {
+      const response = await fetch("/api/checkout/shipping", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          checkoutSessionId: event.checkoutSessionId,
+          shippingDetails: event.shippingDetails,
+        }),
+      });
+      const data = (await response.json()) as { type?: string; message?: string };
+      if (!response.ok || data.type === "error") {
+        return {
+          type: "reject" as const,
+          errorMessage:
+            data.message ?? "We can’t ship to that address. Write through the contact form.",
+        };
+      }
+      return { type: "accept" as const };
+    },
+    [],
+  );
+
   const waitingForConfig = config === null;
   const canMount = Boolean(stripePromise) && !error;
 
@@ -68,7 +90,7 @@ export default function CheckoutPage() {
       <header className="mt-10 max-w-xl">
         <h1 className="font-serif text-5xl tracking-tight md:text-6xl">Checkout</h1>
         <p className="mt-5 text-sm leading-7 text-fg/55">
-          Pay on this site. Shipping address is collected for the original canvases.
+          Pay on this site. Shipping is calculated from the address you enter.
         </p>
       </header>
 
@@ -83,7 +105,10 @@ export default function CheckoutPage() {
         </p>
       ) : canMount ? (
         <div className="mt-12 max-w-2xl bg-[#fff] p-3">
-          <EmbeddedCheckoutProvider stripe={stripePromise} options={{ fetchClientSecret }}>
+          <EmbeddedCheckoutProvider
+            stripe={stripePromise}
+            options={{ fetchClientSecret, onShippingDetailsChange }}
+          >
             <EmbeddedCheckout />
           </EmbeddedCheckoutProvider>
         </div>

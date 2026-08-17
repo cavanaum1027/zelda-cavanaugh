@@ -67,7 +67,8 @@ export const productCopy: Record<string, ProductCopy> = {
     quote:
       "I am a series of small victories and large defeats and I am as amazed as any other that I have gotten from there to here.",
     attribution: "Charles Bukowski",
-    description: canvas("Depersonalization Disorder"),
+    description: giclee("Depersonalization Disorder"),
+    print: true,
   },
   medicine: {
     size: "18 × 24 in",
@@ -83,7 +84,8 @@ export const productCopy: Record<string, ProductCopy> = {
     quote:
       "I did not care what it was all about. All I wanted to know was how to live in it. Maybe if you found out how to live in it you learned from that what is was all about.",
     attribution: "Ernest Hemingway, The Sun Also Rises",
-    description: canvas("Bipolar 1"),
+    description: giclee("Bipolar 1"),
+    print: true,
   },
   "blue-mnemosyne": {
     size: "8 × 8 in",
@@ -167,7 +169,8 @@ export const productCopy: Record<string, ProductCopy> = {
     quote: "You are so brave and quiet I forget you are suffering.",
     attribution: "Ernest Hemingway",
     description:
-      "Canvas with hand-generated gilding and embroidery. Imagery reflective of symptoms associated with PTSD. Gold detailing follows the Circle of Fifths — a tonal architecture mirroring the diagnosis.",
+      "Giclée print with imagery reflective of symptoms associated with PTSD. Gold detailing follows the Circle of Fifths — a tonal architecture mirroring the diagnosis.",
+    print: true,
   },
   butterflies: {
     size: "8 × 8 in",
@@ -267,7 +270,8 @@ export const productCopy: Record<string, ProductCopy> = {
     quote:
       "You expected to be sad in the fall. Part of you died each year when the leaves fell from the trees and their branches were bare against the wind and the cold, wintery light. But you knew there would always be the spring, as you knew the river would flow again after it was frozen. When the cold rains kept on and killed the spring, it was as though a young person died for no reason.",
     attribution: "Ernest Hemingway, A Moveable Feast",
-    description: canvas("Bipolar Disorder (BD)", "silk embroidery"),
+    description: giclee("Bipolar Disorder (BD)"),
+    print: true,
   },
   scales: {
     size: "12 × 12 in",

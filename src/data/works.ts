@@ -1,4 +1,5 @@
 import { productCopy } from "./product-copy";
+import { localHeroes } from "./work-heroes";
 import { localWorkImages } from "./work-images";
 
 export type Work = {
@@ -787,14 +788,17 @@ function galleryImages(hero: string, extras: string[] = []) {
 
 function enrich(work: Omit<Work, "images" | "tags">): Work {
   const copy = productCopy[work.slug];
-  const extras = localWorkImages[work.slug] ?? [];
+  const extras = (localWorkImages[work.slug] ?? []).filter((src) =>
+    src.startsWith("/"),
+  );
   const merged = { ...work, ...copy };
   const diagnosis = merged.diagnosis ?? parseDiagnosis(merged.description);
+  const image = localHeroes[work.slug] ?? work.image;
   return {
     ...merged,
     diagnosis,
-    image: work.image,
-    images: galleryImages(work.image, extras),
+    image,
+    images: galleryImages(image, extras),
     tags: diagnosisTags(diagnosis),
   };
 }
@@ -802,6 +806,10 @@ function enrich(work: Omit<Work, "images" | "tags">): Work {
 export const works: Work[] = catalog.map(enrich);
 
 export const featuredWorks = works.filter((work) => work.featured);
+
+export const availableWorks = works.filter((work) => !work.soldOut);
+
+export const soldWorks = works.filter((work) => work.soldOut);
 
 export function getWork(slug: string) {
   return works.find((work) => work.slug === slug);

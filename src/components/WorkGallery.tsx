@@ -2,12 +2,14 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import type { Work } from "@/data/works";
+import { workImageAlt } from "@/lib/seo";
 
 export function WorkGallery({
-  title,
+  work,
   images,
 }: {
-  title: string;
+  work: Work;
   images: string[];
 }) {
   const [active, setActive] = useState(0);
@@ -20,7 +22,7 @@ export function WorkGallery({
         {current ? (
           <Image
             src={current}
-            alt={many ? `${title}, view ${active + 1}` : title}
+            alt={workImageAlt(work, many ? active + 1 : undefined)}
             fill
             priority
             sizes="55vw"
@@ -35,7 +37,7 @@ export function WorkGallery({
               <button
                 type="button"
                 onClick={() => setActive(index)}
-                aria-label={`${title} image ${index + 1}`}
+                aria-label={`${work.title} image ${index + 1}`}
                 aria-current={index === active}
                 className={`frame relative block aspect-square w-full ${
                   index === active ? "ring-1 ring-accent" : "opacity-70 hover:opacity-100"

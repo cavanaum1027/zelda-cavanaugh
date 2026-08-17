@@ -5,10 +5,9 @@ import { findUnavailableSlugs } from "@/lib/inventory";
 import {
   PHYSICAL_TAX_CODE,
   SESSION_TTL_SECONDS,
-  SHIPPING_CENTS,
   SHIPPING_COUNTRIES,
-  SHIPPING_LABEL,
 } from "@/lib/commerce";
+import { rateLimit, requestIp } from "@/lib/rate-limit";
 import {
   getPublishableKey,
   getStripe,
@@ -25,6 +24,13 @@ type Payload = {
 };
 
 export async function POST(request: Request) {
+  if (!rateLimit(`checkout:${requestIp(request)}`, 10, 10 * 60 * 1000)) {
+    return NextResponse.json(
+      { error: "Please wait a moment and try checkout again." },
+      { status: 429 },
+    );
+  }
+
   const keys = logStripeKeyStatus("api/checkout");
   const stripe = getStripe();
   if (!stripe || !keys.publishable) {
@@ -32,7 +38,6 @@ export async function POST(request: Request) {
       {
         error:
           "Checkout isn’t configured on the server yet. Write through the contact form if you want a work held.",
-        keysPresent: { secret: keys.secret, publishable: keys.publishable },
       },
       { status: 503 },
     );
@@ -134,7 +139,7 @@ export async function POST(request: Request) {
   try {
     const session = await stripe.checkout.sessions.create(
       {
-        ui_mode: "embedded",
+        ui_mode: "embedded_page",
         mode: "payment",
         line_items: lineItems,
         metadata,
@@ -144,6 +149,9 @@ export async function POST(request: Request) {
         phone_number_collection: { enabled: true },
         expires_at: Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS,
         ...(taxEnabled ? { automatic_tax: { enabled: true } } : {}),
+        permissions: {
+          update_shipping_details: "server_only",
+        },
         shipping_address_collection: {
           allowed_countries: [...SHIPPING_COUNTRIES],
         },
@@ -151,20 +159,15 @@ export async function POST(request: Request) {
           {
             shipping_rate_data: {
               type: "fixed_amount",
-              fixed_amount: { amount: SHIPPING_CENTS, currency: "usd" },
-              display_name: SHIPPING_LABEL,
-              tax_behavior: taxEnabled ? "exclusive" : undefined,
-              delivery_estimate: {
-                minimum: { unit: "business_day", value: 5 },
-                maximum: { unit: "business_day", value: 12 },
-              },
+              fixed_amount: { amount: 0, currency: "usd" },
+              display_name: "Calculating shipping",
             },
           },
         ],
         custom_text: {
           shipping_address: {
             message:
-              "Original canvases ship via UPS. Include a phone number the carrier can reach.",
+              "Shipping is calculated from this address. Original canvases ship via UPS. Include a phone number the carrier can reach.",
           },
         },
         return_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,

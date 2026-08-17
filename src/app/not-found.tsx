@@ -1,5 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { PlusRule } from "@/components/Marks";
+
+export const metadata: Metadata = {
+  title: "Not found",
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

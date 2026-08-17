@@ -1,6 +1,4 @@
 export const CART_STORAGE_KEY = "zelda-cart-v1";
-export const SHIPPING_CENTS = 4500;
-export const SHIPPING_LABEL = "UPS Ground";
 export const SHIPPING_COUNTRIES = [
   "US",
   "CA",

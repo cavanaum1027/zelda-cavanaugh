@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
+import { JsonLd } from "@/components/JsonLd";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { exhibitions } from "@/data/site";
+import { exhibitionEventsJsonLd, pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Exhibitions",
-  description: "International exhibitions in Berlin, Paris, London, Barcelona, and New York.",
-};
+  description:
+    "Zelda Cavanaugh exhibitions in Berlin, Paris, London, Barcelona, and New York. Forthcoming: Beyond Borders in Barcelona, plus selected history.",
+  path: "/exhibitions",
+});
 
 export default function ExhibitionsPage() {
   const upcoming = exhibitions.filter((item) => item.status === "upcoming");
@@ -13,11 +18,18 @@ export default function ExhibitionsPage() {
 
   return (
     <div className="relative overflow-hidden px-5 pb-8 pt-28 md:px-8 lg:px-10">
+      <JsonLd data={exhibitionEventsJsonLd()} />
       <PlusRule />
       <OutlineNum className="absolute -right-4 top-12 text-[32vw] md:text-[16rem]">04</OutlineNum>
 
       <header className="relative mt-8 max-w-xl">
-        <h1 className="text-5xl font-extrabold tracking-tight md:text-6xl">Exhibitions</h1>
+        <PageBreadcrumb
+          items={[
+            { name: "zelda cavanaugh", href: "/" },
+            { name: "exhibitions", href: "/exhibitions" },
+          ]}
+        />
+        <h1 className="mt-6 text-5xl font-extrabold tracking-tight md:text-6xl">Exhibitions</h1>
         <p className="mt-5 text-sm leading-7 text-fg/55">
           Berlin, Paris, London, Barcelona, New York. The themes travel: mental
           health, identity, the friction between humanity and the machine.

@@ -8,6 +8,8 @@ export function ContactForm() {
   const work = params.get("work") ?? "";
   const print = params.get("print") === "1";
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   const defaultMessage = useMemo(
     () =>
@@ -19,23 +21,44 @@ export function ContactForm() {
     [work, print],
   );
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const name = String(data.get("name") ?? "");
-    const email = String(data.get("email") ?? "");
-    const subject = String(data.get("subject") ?? "Inquiry");
-    const message = String(data.get("message") ?? "");
-    const body = `From: ${name} <${email}>\n\n${message}`;
-    window.location.href = `mailto:studio@zeldacavanaugh.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    setSending(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: String(data.get("name") ?? ""),
+          email: String(data.get("email") ?? ""),
+          subject: String(data.get("subject") ?? "Inquiry"),
+          message: String(data.get("message") ?? ""),
+          website: String(data.get("website") ?? ""),
+        }),
+      });
+      const payload = (await res.json().catch(() => null)) as {
+        error?: string;
+      } | null;
+      if (!res.ok) {
+        setError(payload?.error ?? "The message could not be sent. Please try again.");
+        return;
+      }
+      setSent(true);
+    } catch {
+      setError("The message could not be sent. Please try again.");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (sent) {
     return (
       <p className="text-2xl font-semibold leading-snug">
-        Thank you. If your mail client did not open, write directly and I will
-        follow up.
+        Thank you. I will follow up.
       </p>
     );
   }
@@ -45,6 +68,10 @@ export function ContactForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-7">
+      <label className="absolute left-[-9999px] h-0 w-0 overflow-hidden">
+        Website
+        <input tabIndex={-1} autoComplete="off" name="website" />
+      </label>
       <label className="block">
         <span className="text-[12px] text-fg/45">Name</span>
         <input required name="name" className={field} />
@@ -69,10 +96,17 @@ export function ContactForm() {
       </label>
       <label className="block">
         <span className="text-[12px] text-fg/45">Message</span>
-        <textarea required name="message" rows={6} defaultValue={defaultMessage} className={field} />
+        <textarea
+          required
+          name="message"
+          rows={6}
+          defaultValue={defaultMessage}
+          className={field}
+        />
       </label>
-      <button type="submit" className="pill">
-        Send
+      {error ? <p className="text-sm text-accent">{error}</p> : null}
+      <button type="submit" className="pill" disabled={sending}>
+        {sending ? "Sending" : "Send"}
       </button>
     </form>
   );

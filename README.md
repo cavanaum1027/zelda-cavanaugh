@@ -1,6 +1,6 @@
 # Zelda Cavanaugh
 
-Personal artist website for Zelda Cavanaugh — studies in translation between the DSM-5, generative systems, and hand-stitched canvas.
+Artist site for Zelda Cavanaugh, the studio name of Michelle Cavanaugh. Original canvases sell on this domain. Live: [zeldacavanaugh.com](https://www.zeldacavanaugh.com).
 
 ```bash
 npm install
@@ -9,31 +9,65 @@ npm run dev -- --port 3001 --hostname 127.0.0.1
 
 Open [http://127.0.0.1:3001](http://127.0.0.1:3001).
 
-## Selling on this site (Stripe)
+## What the site does
 
-Buyers stay on this domain: **Add to cart → cart → embedded Stripe Checkout**, with billing + shipping address collected for original canvases. Prices come from `src/data/works.ts` (charged in cents). Sold works cannot be added. A paid or in-progress Checkout Session also blocks a second buyer of the same original.
+- `/work` lists available originals. `/work?view=sold` lists sold work. Giclée prints of sold pieces are inquiry only.
+- Cart and Stripe Embedded Checkout stay on this domain. Shipping is quoted at checkout.
+- `/contact` sends mail to zeldacavanaugh@gmail.com through Resend.
+- `/notes` holds Field Notes essays. `/privacy` is the short privacy note.
+- `/brand` is unlisted. Invoice marks and the plus icon live there.
 
-### Env vars (never commit `.env.local`)
+## Env vars (never commit `.env.local`)
+
+Copy `.env.local.example` to `.env.local`. Restart `next dev` after changing keys.
 
 | Name | Where it lives |
 | --- | --- |
-| `STRIPE_SECRET_KEY` | server only (`sk_test_...` then `sk_live_...`) |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | browser (`pk_test_...` then `pk_live_...`) |
-| `STRIPE_WEBHOOK_SECRET` | server only (`whsec_...`) |
-| `NEXT_PUBLIC_SITE_URL` | return URL, e.g. `http://127.0.0.1:3001` or `https://www.zeldacavanaugh.com` |
-| `STRIPE_TAX_ENABLED` | optional; set `true` only after Stripe Tax registrations are done |
+| `STRIPE_SECRET_KEY` | server (`sk_test_...` locally, `sk_live_...` on Vercel) |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | browser |
+| `STRIPE_WEBHOOK_SECRET` | server (`whsec_...`) |
+| `NEXT_PUBLIC_SITE_URL` | `http://127.0.0.1:3001` locally, `https://www.zeldacavanaugh.com` in production |
+| `STRIPE_TAX_ENABLED` | optional; `true` only after Stripe Tax registrations |
+| `RESEND_API_KEY` | server; contact form and sale notices |
+| `CONTACT_FROM_EMAIL` | optional. After the domain is verified in Resend: `Zelda Cavanaugh <studio@zeldacavanaugh.com>` |
 
-Copy `.env.local.example` to `.env.local`, paste **test** keys (`sk_test_` / `pk_test_`), **restart** `next dev`. Never put `sk_live_` in `.env.local` until you are ready to take real payments.
+Local Stripe testing uses the sandbox account in `.env.local.example`. Live catalog prices in `src/data/stripe-catalog.ts` belong to `acct_1U5AA1ElE4HX66r3`. Production Vercel keys must be from that live account.
 
-### Stripe Dashboard (sandbox first)
+## Stripe
 
-1. Open [API keys for Zelda Cavanaugh, LLC sandbox](https://dashboard.stripe.com/acct_1U5AAFRTRS9mkhxW/apikeys) with **Test mode** on.
-2. Copy the Secret key (`sk_test_...`) and Publishable key (`pk_test_...`) into `.env.local`.
-3. Restart the site: `npm run dev -- --port 3001 --hostname 127.0.0.1`
-4. Add a work to cart and open `/checkout` (embedded Checkout on this site). Pay with card `4242 4242 4242 4242`, any future expiry, any CVC.
-5. Webhooks (local): `stripe listen --forward-to http://127.0.0.1:3001/api/stripe/webhook` and put the `whsec_...` into `STRIPE_WEBHOOK_SECRET`. Listen for `checkout.session.completed`, `checkout.session.async_payment_succeeded`, and `checkout.session.async_payment_failed`.
-6. After a real sale later, set `soldOut: true` on that work in `src/data/works.ts`.
-7. Optional tax: complete [Stripe Tax registrations](https://dashboard.stripe.com/settings/tax), then set `STRIPE_TAX_ENABLED=true`.
-8. When a test order looks right: turn Test mode off, paste **live** keys, set `NEXT_PUBLIC_SITE_URL` to `https://www.zeldacavanaugh.com`, and complete payouts setup.
+1. Test mode: [sandbox API keys](https://dashboard.stripe.com/acct_1U5AAFRTRS9mkhxW/apikeys).
+2. Paste `sk_test_` and `pk_test_` into `.env.local`. Restart the site.
+3. Add a work, open `/checkout`, pay with `4242 4242 4242 4242`.
+4. Local webhooks: `stripe listen --forward-to http://127.0.0.1:3001/api/stripe/webhook`. Put the `whsec_...` in `STRIPE_WEBHOOK_SECRET`. Listen for `checkout.session.completed`, `checkout.session.async_payment_succeeded`, and `checkout.session.async_payment_failed`.
+5. After a real sale: mark `soldOut: true` on that work in `src/data/works.ts` and deploy. A paid webhook also emails the studio. It does not edit the catalog by itself.
+6. Live webhook URL: `https://www.zeldacavanaugh.com/api/stripe/webhook`.
 
-Without keys, the cart still works. Checkout explains that payment is not live yet — it does not crash, and it does not send anyone to Squarespace.
+Without keys, the cart still works. Checkout says payment is not live.
+
+## Contact
+
+The form posts to `/api/contact`. Resend delivers to zeldacavanaugh@gmail.com. Reply goes to the visitor. Until the domain is verified, mail comes from `onboarding@resend.dev`.
+
+## After a sale
+
+1. Confirm the Stripe payment and the studio email.
+2. Set `soldOut: true` on the slug in `src/data/works.ts`.
+3. If a Giclée should be offered, set `print: true` in `src/data/product-copy.ts`.
+4. Deploy.
+
+## Deploy
+
+Vercel is not git-connected. Production is:
+
+```bash
+npx vercel --prod --yes
+```
+
+Then commit and push so GitHub matches what is live. Do not commit `.env.local`.
+
+## Content
+
+- Works: `src/data/works.ts`, copy in `src/data/product-copy.ts`, heroes in `public/works/<slug>/hero.jpg`.
+- Notes: `src/data/notes.ts`.
+- Shows, FAQ, press: `src/data/site.ts`.
+- Import helpers: `scripts/import-artworks.py`, `scripts/import-heroes.py`, `scripts/import-notes.py`.

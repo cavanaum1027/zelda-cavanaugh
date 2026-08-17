@@ -33,10 +33,10 @@ MAX_IMAGES = 12
 MAX_PX = 1800
 
 ALIASES = {
-    "happy-esque": ["Happy"],
-    "camouflage": ["Camoflage", "Camouflage"],
+    "happy-esque": ["Happy-esque", "Happy"],
+    "camouflage": ["Camouflage", "Camoflage"],
     "versohnung": ["Versöhnung", "Versöhnung", "Versohnung"],
-    "ocean by night": ["Red", "Ocean by Night"],
+    "ocean by night": ["Ocean by Night", "Red"],
     "dear": ["Dear"],
     "& forgive us": ["& Forgive Us"],
     "derailment": ["Derailment"],
@@ -44,7 +44,7 @@ ALIASES = {
     "butter flies": ["Butter Flies"],
     "self actualization": ["Self Actualization"],
     "my compass is broken": ["My Compass is Broken"],
-    "flight of ideas": ["untitled folder"],
+    "flight of ideas": ["Flight of Ideas"],
     "almost steady": ["Almost Steady"],
     "blue mnemosyne": ["Blue Mnemosyne"],
     "moon by night": ["Moon by Night"],

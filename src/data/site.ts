@@ -16,14 +16,21 @@ export const social = {
     "https://www.contemporaryartcuratormagazine.com/home-2/zelda-cavanaugh-interview",
 };
 
+export const contactEmail = "zeldacavanaugh@gmail.com";
+
+export const identity = {
+  statement:
+    "Zelda Cavanaugh is the studio name of Michelle Cavanaugh, an artist working with DSM-5 diagnostic language, generative systems, gold leaf, and embroidery.",
+};
+
 export const practice = {
   hero: "I investigate how generative systems approximate human emotion. Informed by the DSM-5, neuroscience, and a needle threaded with embroidery floss.",
   intro:
-    "Each work begins with a clinical question: how does a diagnostic framework — the DSM-5 — translate into visual form when filtered through a generative system? The research sits at the intersection of psychology, machine perception, and the limits of language.",
+    "Each work begins with a clinical question: how does a diagnostic framework, the DSM-5, translate into visual form when filtered through a generative system? The research sits at the intersection of psychology, machine perception, and the limits of language.",
   quote:
     "Abstraction as an entry point for machines to approximate emotional nuance.",
   close:
-    "The works are not illustrations of mental illness. They are studies in translation — what is gained and lost when psychological experience moves from clinical text, through algorithmic interpretation, and into hand-stitched image.",
+    "The works are not illustrations of mental illness. They are studies in translation: what is gained and lost when psychological experience moves from clinical text, through algorithmic interpretation, and into hand-stitched image.",
 };
 
 export const processSteps = [
@@ -31,7 +38,7 @@ export const processSteps = [
     number: "01",
     title: "Clinical source",
     kicker: "DSM-5 as input",
-    body: "Diagnostic criteria for a specific disorder become the starting point. The language is precise, categorical, resistant to image — which is exactly why it is interesting.",
+    body: "Diagnostic criteria for a specific disorder become the starting point. The language is precise, categorical, resistant to image, which is exactly why it is interesting.",
   },
   {
     number: "02",
@@ -43,7 +50,7 @@ export const processSteps = [
     number: "03",
     title: "Refinement",
     kicker: "Precision of feeling",
-    body: "Extensive editing in Adobe Illustrator pushes the image toward exactness — not photorealism, but fidelity to a psychological state.",
+    body: "Extensive editing in Adobe Illustrator pushes the image toward exactness, not photorealism, but fidelity to a psychological state.",
   },
   {
     number: "04",
@@ -63,16 +70,9 @@ export const stats = [
 export const exhibitions = [
   {
     status: "upcoming" as const,
-    dates: "Aug 20–24, 2026",
-    year: "2026",
-    title: "The Biennale of Women In Art",
-    venue: "Chelsea Old Town Hall",
-    city: "London",
-    body: "Arranged by Artio Gallery, the Biennale of Women In Art is a global occasion designed to spotlight the work of female artists and foster conversations about contemporary artistic impact.",
-  },
-  {
-    status: "upcoming" as const,
     dates: "Oct 16–18, 2026",
+    startDate: "2026-10-16",
+    endDate: "2026-10-18",
     year: "2026",
     title: "Beyond Borders",
     venue: "European Museum of Modern Art",
@@ -82,6 +82,8 @@ export const exhibitions = [
   {
     status: "past" as const,
     dates: "May 9 – Jun 7, 2025",
+    startDate: "2025-05-09",
+    endDate: "2025-06-07",
     year: "2025",
     title: "ACT II",
     venue: "Galeria Azur",
@@ -91,6 +93,8 @@ export const exhibitions = [
   {
     status: "past" as const,
     dates: "Oct 11–13, 2024",
+    startDate: "2024-10-11",
+    endDate: "2024-10-13",
     year: "2024",
     title: "Beyond Borders",
     venue: "European Museum of Modern Art",
@@ -100,6 +104,8 @@ export const exhibitions = [
   {
     status: "past" as const,
     dates: "Sep 25–29, 2024",
+    startDate: "2024-09-25",
+    endDate: "2024-09-29",
     year: "2024",
     title: "The Biennale of Women In Art",
     venue: "Chelsea Old Town Hall",
@@ -109,6 +115,8 @@ export const exhibitions = [
   {
     status: "past" as const,
     dates: "May 3–28, 2024",
+    startDate: "2024-05-03",
+    endDate: "2024-05-28",
     year: "2024",
     title: "Galeria Azur Pop-Up",
     venue: "IV district, by the Seine",
@@ -118,6 +126,8 @@ export const exhibitions = [
   {
     status: "past" as const,
     dates: "Jan 26 – Feb 28, 2024",
+    startDate: "2024-01-26",
+    endDate: "2024-02-28",
     year: "2024",
     title: "Session 01",
     venue: "Galeria Azur Berlin",
@@ -125,6 +135,14 @@ export const exhibitions = [
     body: "Artwork on display for the first session of 2024 in a city still carrying the legacy of the Bauhaus.",
   },
 ];
+
+export type Exhibition = (typeof exhibitions)[number];
+
+export function nextExhibition() {
+  return exhibitions
+    .filter((item) => item.status === "upcoming")
+    .sort((a, b) => a.startDate.localeCompare(b.startDate))[0];
+}
 
 export const press = [
   {
@@ -192,7 +210,11 @@ export const research = [
     body: "Field Notes is a repository for the rough drafts and the half-life of digital thought. The canvas only shows the final output, but the real story is in the breakdown of the systems beneath it. These essays dive into why companies are terrified of artificial intelligence, what happens when machines take dancing lessons, and why the supercomputer still doesn't know what the consultants do all day. Bureaucracy with an attitude problem, written from the studio floor.",
     links: [
       {
-        label: "Open Field Notes",
+        label: "Read Field Notes",
+        href: "/notes",
+      },
+      {
+        label: "On Substack",
         href: "https://michellecavanaugh.substack.com/",
       },
     ],
@@ -200,6 +222,10 @@ export const research = [
 ];
 
 export const faqs = [
+  {
+    q: "Who is Zelda Cavanaugh?",
+    a: "Zelda Cavanaugh is the studio name of Michelle Cavanaugh, an artist working with DSM-5 diagnostic language, generative systems, gold leaf, and embroidery. Original canvases are listed under Work and sold on this site. Education at the University of Central Florida, Northwestern University, and Cornell University.",
+  },
   {
     q: "How long does it take to create a piece?",
     a: "There is no fixed timeline. Some pieces have taken up to three months, off and on. Others have been completed in less than a day. Each work is unique in its making.",
@@ -218,7 +244,7 @@ export const faqs = [
   },
   {
     q: "What shipping options do you offer?",
-    a: "Shipping is calculated from the buyer’s location. Most items ship via UPS.",
+    a: "Originals ship via UPS Ground. United States from $22. Canada from $38. Britain and Ireland from $48. The rest of Europe from $55. Australia and New Zealand from $72. A second work in the same box is less than the first. Works 24 inches or larger on a side add $12. A phone number is required for the carrier. I do not ship outside those countries.",
   },
   {
     q: "What is your return policy?",

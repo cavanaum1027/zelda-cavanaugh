@@ -3,13 +3,17 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async redirects() {
     return [
-      { source: "/shop", destination: "/work", permanent: false },
-      { source: "/shop/p/:slug", destination: "/work/:slug", permanent: false },
+      { source: "/shop", destination: "/work", permanent: true },
+      { source: "/shop/p/:slug", destination: "/work/:slug", permanent: true },
+    ];
+  },
+  async rewrites() {
+    return [
+      { source: "/apple-touch-icon.png", destination: "/apple-icon" },
+      { source: "/apple-touch-icon-precomposed.png", destination: "/apple-icon" },
     ];
   },
   images: {
-    loader: "custom",
-    loaderFile: "./src/lib/squarespace-loader.ts",
     remotePatterns: [
       {
         protocol: "https",

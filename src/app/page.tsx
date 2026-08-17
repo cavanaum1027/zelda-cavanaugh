@@ -1,17 +1,18 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { exhibitions, practice, processSteps } from "@/data/site";
-import { getWork } from "@/data/works";
+import { featuredWorks, getWork } from "@/data/works";
+import { ShowBanner } from "@/components/ShowBanner";
 import { WorkTile } from "@/components/WorkTile";
+import { JsonLd } from "@/components/JsonLd";
+import { pageMeta, SITE_DESCRIPTION, websiteJsonLd } from "@/lib/seo";
 
-const selectedSlugs = [
-  "beloved",
-  "diffident",
-  "toska",
-  "nepenthe",
-  "creation",
-  "rue",
-] as const;
+export const metadata: Metadata = pageMeta({
+  title: { absolute: "Zelda Cavanaugh — DSM-5 studies in gilding and embroidery" },
+  description: SITE_DESCRIPTION,
+  path: "/",
+});
 
 function Chapter({ n, label }: { n: string; label: string }) {
   return (
@@ -25,10 +26,7 @@ function Chapter({ n, label }: { n: string; label: string }) {
 
 export default function Home() {
   const identityPiece = getWork("beloved");
-  const selected = selectedSlugs
-    .map((slug) => getWork(slug))
-    .filter((work): work is NonNullable<typeof work> => Boolean(work))
-    .filter((work) => work.slug !== identityPiece?.slug);
+  const selected = featuredWorks.filter((work) => work.slug !== identityPiece?.slug);
   const upcoming = exhibitions.filter((item) => item.status === "upcoming");
   const lead = selected[0];
   const second = selected[1];
@@ -36,6 +34,8 @@ export default function Home() {
 
   return (
     <article className="px-5 pb-28 pt-28 md:px-8 lg:px-12">
+      <JsonLd data={websiteJsonLd()} />
+      <ShowBanner />
       <section className="grid items-end gap-12 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-7">
           <div className="mb-8 flex items-center gap-3 text-gold" aria-hidden="true">
@@ -67,7 +67,7 @@ export default function Home() {
             <span className="frame gilt relative block aspect-square">
               <Image
                 src={identityPiece.image}
-                alt={identityPiece.title}
+                alt={`${identityPiece.title}, original canvas by Zelda Cavanaugh`}
                 fill
                 priority
                 sizes="(min-width: 1024px) 40vw, 100vw"

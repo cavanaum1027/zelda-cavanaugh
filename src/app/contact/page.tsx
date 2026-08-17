@@ -3,12 +3,16 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ContactForm } from "@/components/ContactForm";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { social } from "@/data/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Contact",
-  description: "Inquiries for originals, exhibitions, galleries, and consulting.",
-};
+  description:
+    "Contact Zelda Cavanaugh to inquire about originals, Giclée prints, exhibitions, galleries, or consulting.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -17,7 +21,13 @@ export default function ContactPage() {
       <OutlineNum className="absolute -right-6 top-8 text-[36vw] md:text-[16rem]">08</OutlineNum>
 
       <header className="relative mt-8 max-w-xl">
-        <h1 className="text-5xl font-extrabold tracking-tight md:text-6xl">Contact</h1>
+        <PageBreadcrumb
+          items={[
+            { name: "zelda cavanaugh", href: "/" },
+            { name: "contact", href: "/contact" },
+          ]}
+        />
+        <h1 className="mt-6 text-5xl font-extrabold tracking-tight md:text-6xl">Contact</h1>
         <p className="mt-5 text-sm leading-7 text-fg/55">
           A work, an exhibition, a consultation. AI innovation, design,
           storytelling, and product — $175 per hour.
@@ -33,17 +43,17 @@ export default function ContactPage() {
         <aside className="lg:col-span-4 lg:col-start-9 lg:pt-4">
           <ul className="space-y-3 text-lg lowercase">
             <li>
-              <a href={social.instagram} target="_blank" rel="noreferrer">
+              <a href={social.instagram} target="_blank" rel="me noreferrer">
                 + instagram
               </a>
             </li>
             <li>
-              <a href={social.substack} target="_blank" rel="noreferrer">
+              <a href={social.substack} target="_blank" rel="me noreferrer">
                 + field notes
               </a>
             </li>
             <li>
-              <a href={social.artsy} target="_blank" rel="noreferrer">
+              <a href={social.artsy} target="_blank" rel="me noreferrer">
                 + artsy
               </a>
             </li>

@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { PressQuote } from "@/components/PressQuote";
 import { press } from "@/data/site";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
   title: "Press",
-  description: "Selected press and interviews.",
-};
+  description:
+    "Press on Zelda Cavanaugh: Artio Magazine, the IBM Business Schooled podcast, and an interview with Contemporary Art Curator Magazine.",
+  path: "/press",
+});
 
 export default function PressPage() {
   return (
@@ -15,7 +19,13 @@ export default function PressPage() {
       <OutlineNum className="absolute -right-6 top-8 text-[36vw] md:text-[16rem]">05</OutlineNum>
 
       <header className="relative mt-8 max-w-xl">
-        <h1 className="text-5xl font-extrabold tracking-tight md:text-6xl">Press</h1>
+        <PageBreadcrumb
+          items={[
+            { name: "zelda cavanaugh", href: "/" },
+            { name: "press", href: "/press" },
+          ]}
+        />
+        <h1 className="mt-6 text-5xl font-extrabold tracking-tight md:text-6xl">Press</h1>
         <p className="mt-5 text-sm leading-7 text-fg/55">
           A new visual language — and a reminder that the core of creativity
           remains distinctly human.

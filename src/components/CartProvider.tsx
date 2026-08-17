@@ -4,9 +4,9 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from "react";
 import { CART_STORAGE_KEY, type CartEntry } from "@/lib/commerce";
 import { formatPrice, getWork, type Work } from "@/data/works";
@@ -30,35 +30,62 @@ type CartContextValue = {
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
+const CART_EVENT = "zelda-cart";
 
-function readStored(): CartEntry[] {
+function parseEntries(raw: string): CartEntry[] {
   try {
-    const raw = localStorage.getItem(CART_STORAGE_KEY);
-    if (!raw) return [];
     const parsed = JSON.parse(raw) as CartEntry[];
     if (!Array.isArray(parsed)) return [];
     return parsed
       .filter((item) => item && typeof item.slug === "string")
-      .map((item) => ({ slug: item.slug, quantity: Math.max(1, Number(item.quantity) || 1) }));
+      .map((item) => ({
+        slug: item.slug,
+        quantity: Math.max(1, Number(item.quantity) || 1),
+      }));
   } catch {
     return [];
   }
 }
 
+function getCartSnapshot() {
+  try {
+    return localStorage.getItem(CART_STORAGE_KEY) ?? "[]";
+  } catch {
+    return "[]";
+  }
+}
+
+function getServerCartSnapshot() {
+  return "[]";
+}
+
+function subscribeCart(onStoreChange: () => void) {
+  window.addEventListener("storage", onStoreChange);
+  window.addEventListener(CART_EVENT, onStoreChange);
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener(CART_EVENT, onStoreChange);
+  };
+}
+
+function writeCart(entries: CartEntry[]) {
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(entries));
+  window.dispatchEvent(new Event(CART_EVENT));
+}
+
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [entries, setEntries] = useState<CartEntry[]>([]);
+  const raw = useSyncExternalStore(
+    subscribeCart,
+    getCartSnapshot,
+    getServerCartSnapshot,
+  );
+  const ready = useSyncExternalStore(
+    subscribeCart,
+    () => true,
+    () => false,
+  );
   const [open, setOpen] = useState(false);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setEntries(readStored());
-    setReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!ready) return;
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(entries));
-  }, [entries, ready]);
+  const entries = useMemo(() => parseEntries(raw), [raw]);
 
   const lines = useMemo<CartLine[]>(
     () =>
@@ -83,29 +110,32 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const add = useCallback((slug: string) => {
     const work = getWork(slug);
     if (!work || work.soldOut || work.print) return false;
-    setEntries((current) => {
-      if (current.some((item) => item.slug === slug)) return current;
-      return [...current, { slug, quantity: 1 }];
-    });
+    const current = parseEntries(getCartSnapshot());
+    if (current.some((item) => item.slug === slug)) {
+      setOpen(true);
+      return true;
+    }
+    writeCart([...current, { slug, quantity: 1 }]);
     setOpen(true);
     return true;
   }, []);
 
   const setQuantity = useCallback((slug: string, quantity: number) => {
+    const current = parseEntries(getCartSnapshot());
     if (quantity < 1) {
-      setEntries((current) => current.filter((item) => item.slug !== slug));
+      writeCart(current.filter((item) => item.slug !== slug));
       return;
     }
-    setEntries((current) =>
+    writeCart(
       current.map((item) => (item.slug === slug ? { ...item, quantity: 1 } : item)),
     );
   }, []);
 
   const remove = useCallback((slug: string) => {
-    setEntries((current) => current.filter((item) => item.slug !== slug));
+    writeCart(parseEntries(getCartSnapshot()).filter((item) => item.slug !== slug));
   }, []);
 
-  const clear = useCallback(() => setEntries([]), []);
+  const clear = useCallback(() => writeCart([]), []);
 
   const value = useMemo(
     () => ({

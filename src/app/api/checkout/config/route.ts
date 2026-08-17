@@ -10,6 +10,5 @@ export async function GET() {
   return NextResponse.json({
     configured: keys.secret && keys.publishable,
     publishableKey: publishableKey || null,
-    keysPresent: { secret: keys.secret, publishable: keys.publishable },
   });
 }

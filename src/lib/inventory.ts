@@ -7,6 +7,25 @@ function slugsFromSession(session: Stripe.Checkout.Session) {
     .filter(Boolean);
 }
 
+async function listSessions(stripe: Stripe, status: "complete" | "open") {
+  const sessions: Stripe.Checkout.Session[] = [];
+  let startingAfter: string | undefined;
+
+  for (let page = 0; page < 10; page += 1) {
+    const batch = await stripe.checkout.sessions.list({
+      status,
+      limit: 100,
+      starting_after: startingAfter,
+    });
+    sessions.push(...batch.data);
+    if (!batch.has_more) break;
+    startingAfter = batch.data.at(-1)?.id;
+    if (!startingAfter) break;
+  }
+
+  return sessions;
+}
+
 export async function findUnavailableSlugs(stripe: Stripe, slugs: string[]) {
   const wanted = new Set(slugs);
   const sold = new Set<string>();
@@ -14,18 +33,18 @@ export async function findUnavailableSlugs(stripe: Stripe, slugs: string[]) {
 
   try {
     const [complete, open] = await Promise.all([
-      stripe.checkout.sessions.list({ status: "complete", limit: 100 }),
-      stripe.checkout.sessions.list({ status: "open", limit: 100 }),
+      listSessions(stripe, "complete"),
+      listSessions(stripe, "open"),
     ]);
 
-    for (const session of complete.data) {
+    for (const session of complete) {
       if (session.payment_status !== "paid") continue;
       for (const slug of slugsFromSession(session)) {
         if (wanted.has(slug)) sold.add(slug);
       }
     }
 
-    for (const session of open.data) {
+    for (const session of open) {
       for (const slug of slugsFromSession(session)) {
         if (wanted.has(slug) && !sold.has(slug)) held.add(slug);
       }

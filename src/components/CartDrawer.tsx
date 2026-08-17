@@ -17,9 +17,20 @@ export function CartDrawer() {
         aria-label="Close cart"
         onClick={() => setOpen(false)}
       />
-      <aside className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-fg/10 bg-bg px-6 py-8 text-fg">
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-title"
+        tabIndex={-1}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setOpen(false);
+        }}
+        className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col border-l border-fg/10 bg-bg px-6 py-8 text-fg"
+      >
         <div className="flex items-baseline justify-between">
-          <h2 className="font-serif text-3xl">Cart</h2>
+          <h2 id="cart-title" className="font-serif text-3xl">
+            Cart
+          </h2>
           <button type="button" className="text-sm lowercase" onClick={() => setOpen(false)}>
             close
           </button>
@@ -72,7 +83,7 @@ export function CartDrawer() {
                 <span>{money(subtotal)}</span>
               </p>
               <p className="mt-2 text-[12px] text-fg/40">
-                Shipping is added at checkout. Originals ship via UPS.
+                UPS Ground. United States from $22. Calculated at checkout.
               </p>
               {lines.some((line) => line.work.soldOut) ? (
                 <p className="mt-4 text-sm text-accent">
