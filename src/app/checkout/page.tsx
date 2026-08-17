@@ -17,7 +17,7 @@ export default function CheckoutPage() {
   const { lines, ready } = useCart();
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<CheckoutConfig | null>(null);
-  const purchasable = lines.filter((line) => !line.work.soldOut);
+  const purchasable = lines.filter((line) => !line.work.soldOut && !line.work.print);
   const slugs = purchasable.map((line) => line.slug).join(",");
   const publishableKey = config?.publishableKey ?? "";
   const stripePromise = useMemo<Promise<Stripe | null> | null>(() => {

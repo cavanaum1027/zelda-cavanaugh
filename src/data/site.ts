@@ -1,9 +1,9 @@
 export const nav = [
   { href: "/work", label: "Work" },
+  { href: "/about", label: "About" },
   { href: "/exhibitions", label: "Exhibitions" },
   { href: "/press", label: "Press" },
   { href: "/research", label: "Research" },
-  { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ];
@@ -210,7 +210,7 @@ export const faqs = [
   },
   {
     q: "Can I purchase original artwork?",
-    a: "Yes. Available originals are listed under Work. Add a canvas to the cart and pay on this site — shipping address is collected at checkout. If you are interested in a piece that is not listed, write through the contact form.",
+    a: "Yes. Available originals are listed under Work. Add a canvas to the cart and pay on this site — shipping address is collected at checkout. If you are interested in a piece that is not listed, write through the contact form. Giclée prints of sold originals are available by inquiry — please reach out through the contact form.",
   },
   {
     q: "What are your payment terms?",
@@ -234,7 +234,7 @@ export const faqs = [
   },
   {
     q: "What is a Giclée print?",
-    a: "A Giclée print (pronounced “zhee-clay”) is a high-quality reproduction created with pigment-based inks on archival paper or canvas. Colors remain stable for over a hundred years. Prints match the dimensions of the originals, but original canvases remain unique: they carry hand-applied gold gilding and embroidery, and that imagery is never reproduced on canvas.",
+    a: "A Giclée print (pronounced “zhee-clay”) is a high-quality reproduction created with pigment-based inks on archival paper. Colors remain stable for over a hundred years. Prints match the dimensions of the originals; the original canvases remain unique, with hand-applied gold gilding and embroidery that is never reproduced on canvas. Prints are not sold through the cart. If you would like to purchase a print, please reach out through the contact form to inquire.",
   },
   {
     q: "Do you provide consulting?",

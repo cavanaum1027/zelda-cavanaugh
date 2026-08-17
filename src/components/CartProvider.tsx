@@ -64,7 +64,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     () =>
       entries.flatMap((entry) => {
         const work = getWork(entry.slug);
-        if (!work) return [];
+        if (!work || work.print) return [];
         return [{ ...entry, work }];
       }),
     [entries],
@@ -82,7 +82,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const add = useCallback((slug: string) => {
     const work = getWork(slug);
-    if (!work || work.soldOut) return false;
+    if (!work || work.soldOut || work.print) return false;
     setEntries((current) => {
       if (current.some((item) => item.slug === slug)) return current;
       return [...current, { slug, quantity: 1 }];

@@ -6,14 +6,17 @@ import { FormEvent, useMemo, useState } from "react";
 export function ContactForm() {
   const params = useSearchParams();
   const work = params.get("work") ?? "";
+  const print = params.get("print") === "1";
   const [sent, setSent] = useState(false);
 
   const defaultMessage = useMemo(
     () =>
-      work
-        ? `I am inquiring about “${work}.”`
-        : "I would like to discuss a work, exhibition, or consultation.",
-    [work],
+      work && print
+        ? `I am inquiring about purchasing a Giclée print of “${work}.”`
+        : work
+          ? `I am inquiring about “${work}.”`
+          : "I would like to discuss a work, exhibition, or consultation.",
+    [work, print],
   );
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -54,7 +57,13 @@ export function ContactForm() {
         <span className="text-[12px] text-fg/45">Subject</span>
         <input
           name="subject"
-          defaultValue={work ? `Inquiry: ${work}` : "Inquiry"}
+          defaultValue={
+            work
+              ? print
+                ? `Print inquiry: ${work}`
+                : `Inquiry: ${work}`
+              : "Inquiry"
+          }
           className={field}
         />
       </label>

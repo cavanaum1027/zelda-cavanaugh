@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getStripePriceId } from "@/data/stripe-catalog";
 import { getWork } from "@/data/works";
 import { findUnavailableSlugs } from "@/lib/inventory";
 import {
@@ -58,27 +59,44 @@ export async function POST(request: Request) {
     if (work.soldOut) {
       return NextResponse.json({ error: `${work.title} is sold.` }, { status: 400 });
     }
-    slugs.push(work.slug);
-    lineItems.push({
-      quantity: 1,
-      adjustable_quantity: { enabled: false },
-      price_data: {
-        currency: "usd" as const,
-        unit_amount: Math.round(work.price * 100),
-        tax_behavior: taxEnabled ? ("exclusive" as const) : undefined,
-        product_data: {
-          name: `Zelda Cavanaugh — ${work.title}`,
-          description: work.description ?? work.size ?? "Original canvas",
-          images: [
-            work.image.startsWith("http")
-              ? work.image
-              : `${siteOrigin(request)}${work.image}`,
-          ],
-          tax_code: PHYSICAL_TAX_CODE,
-          metadata: { slug: work.slug },
+    if (work.print) {
+      return NextResponse.json(
+        {
+          error: `${work.title} is a Giclée print. Write through the contact form to inquire about a print.`,
         },
-      },
-    });
+        { status: 400 },
+      );
+    }
+    slugs.push(work.slug);
+    const priceId = getStripePriceId(work.slug);
+    if (priceId) {
+      lineItems.push({
+        quantity: 1,
+        adjustable_quantity: { enabled: false },
+        price: priceId,
+      });
+    } else {
+      lineItems.push({
+        quantity: 1,
+        adjustable_quantity: { enabled: false },
+        price_data: {
+          currency: "usd" as const,
+          unit_amount: Math.round(work.price * 100),
+          tax_behavior: taxEnabled ? ("exclusive" as const) : undefined,
+          product_data: {
+            name: `Zelda Cavanaugh — ${work.title}`,
+            description: work.description ?? work.size ?? "Original canvas",
+            images: [
+              work.image.startsWith("http")
+                ? work.image
+                : `${siteOrigin(request)}${work.image}`,
+            ],
+            tax_code: PHYSICAL_TAX_CODE,
+            metadata: { slug: work.slug },
+          },
+        },
+      });
+    }
   }
 
   if (lineItems.length === 0) {

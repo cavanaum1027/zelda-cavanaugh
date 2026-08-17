@@ -724,21 +724,77 @@ function diagnosisTags(diagnosis?: string) {
   if (/adjustment/.test(n)) tags.push("Adjustment Disorders");
   if (/bereavement|grief|ghost sickness/.test(n)) tags.push("Grief");
   if (/dysthymic|depress/.test(n)) tags.push("Depression");
-  if (/^recovery$/i.test(n)) return [];
+  if (/ptsd|post-traumatic/.test(n)) tags.push("PTSD");
+  if (/depersonalization/.test(n)) tags.push("Depersonalization");
+  if (/borderline/.test(n)) tags.push("Borderline Personality Disorder");
+  if (/narcissistic/.test(n)) tags.push("Narcissistic Personality Disorder");
+  if (/confabulation/.test(n)) tags.push("Confabulation");
   return [...new Set(tags)];
+}
+
+/** Local folders that are mostly ~25KB solid-black JPEGs. */
+const TINY_BLACK_LOCAL_SLUGS = new Set([
+  "neuralorchestra",
+  "forgive-us",
+  "friction",
+  "masked",
+  "stumble",
+  "yellow",
+  "butterflies",
+  "butterflies-3gkzc",
+  "moonbynight",
+  "acedia",
+  "happyesque",
+  "tree",
+  "sophism",
+  "vershnung",
+  "who",
+  "fairytalesandsong",
+  "almost-steady",
+  "blue-mnemosyne",
+  "immarcescible",
+  "medicine",
+  "ichverlust",
+  "toska",
+  "awen",
+]);
+
+/** Real extra photos in those folders (file size >= 80KB). */
+const LARGE_LOCAL_EXTRAS = new Set([
+  "/works/vershnung/03.jpg",
+  "/works/who/04.jpg",
+  "/works/fairytalesandsong/03.jpg",
+  "/works/blue-mnemosyne/05.jpg",
+]);
+
+function isTinyBlackLocal(src: string) {
+  if (!src.startsWith("/works/")) return false;
+  const slug = src.split("/")[2];
+  if (!TINY_BLACK_LOCAL_SLUGS.has(slug)) return false;
+  return !LARGE_LOCAL_EXTRAS.has(src);
+}
+
+function galleryImages(hero: string, extras: string[] = []) {
+  const seen = new Set<string>([hero]);
+  const images = [hero];
+  for (const src of extras) {
+    if (!src || seen.has(src) || isTinyBlackLocal(src)) continue;
+    seen.add(src);
+    images.push(src);
+  }
+  return images;
 }
 
 function enrich(work: Omit<Work, "images" | "tags">): Work {
   const copy = productCopy[work.slug];
-  const local = localWorkImages[work.slug];
-  const images = local?.length ? local : [work.image];
+  const extras = localWorkImages[work.slug] ?? [];
   const merged = { ...work, ...copy };
   const diagnosis = merged.diagnosis ?? parseDiagnosis(merged.description);
   return {
     ...merged,
     diagnosis,
-    image: images[0] ?? work.image,
-    images,
+    image: work.image,
+    images: galleryImages(work.image, extras),
     tags: diagnosisTags(diagnosis),
   };
 }

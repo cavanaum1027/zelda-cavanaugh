@@ -65,7 +65,15 @@ export default async function WorkDetailPage({ params }: Props) {
             <p className="mt-8 max-w-prose text-sm leading-7 text-fg/55">{work.description}</p>
           ) : null}
           {work.print ? (
-            <p className="mt-6 max-w-prose text-sm leading-7 text-fg/45">{gicleeNote}</p>
+            <p className="mt-6 max-w-prose text-sm leading-7 text-fg/45">
+              {gicleeNote}{" "}
+              <Link
+                href={`/contact?work=${encodeURIComponent(work.title)}&print=1`}
+                className="text-fg/70 hover:text-accent"
+              >
+                If you would like to purchase a print, please reach out to inquire.
+              </Link>
+            </p>
           ) : null}
           {work.diagnosis || work.size ? (
             <p className="mt-4 text-[12px] text-fg/40">
@@ -73,13 +81,24 @@ export default async function WorkDetailPage({ params }: Props) {
             </p>
           ) : null}
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <AddToCart slug={work.slug} soldOut={work.soldOut} />
-            <Link
-              href={`/contact?work=${encodeURIComponent(work.title)}`}
-              className="inline-flex items-center text-sm lowercase text-fg/70 hover:text-accent"
-            >
-              + inquire
-            </Link>
+            {work.print ? (
+              <Link
+                href={`/contact?work=${encodeURIComponent(work.title)}&print=1`}
+                className="pill"
+              >
+                Inquire about a print
+              </Link>
+            ) : (
+              <>
+                <AddToCart slug={work.slug} soldOut={work.soldOut} />
+                <Link
+                  href={`/contact?work=${encodeURIComponent(work.title)}`}
+                  className="inline-flex items-center text-sm lowercase text-fg/70 hover:text-accent"
+                >
+                  + inquire
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
