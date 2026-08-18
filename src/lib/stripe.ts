@@ -7,7 +7,10 @@ function readEnv(name: string) {
 
 function isUsableSecret(value?: string) {
   return Boolean(
-    (value?.startsWith("sk_test_") || value?.startsWith("sk_live_")) &&
+    (value?.startsWith("sk_test_") ||
+      value?.startsWith("sk_live_") ||
+      value?.startsWith("rk_test_") ||
+      value?.startsWith("rk_live_")) &&
       !value.includes("replace_me") &&
       !value.includes("...") &&
       value.length > 20,
