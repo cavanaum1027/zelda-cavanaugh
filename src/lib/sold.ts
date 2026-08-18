@@ -2,7 +2,7 @@ import soldOverlay from "@/data/sold-overlay.json";
 import { getWork, type Work } from "@/data/works";
 
 const OVERLAY_PATH = "src/data/sold-overlay.json";
-const DEFAULT_REPO = "Michelle-Cavanaugh/zelda-cavanaugh";
+const DEFAULT_REPO = "cavanaum1027/zelda-cavanaugh";
 const DEFAULT_BRANCH = "main";
 
 function asSlugList(value: unknown): string[] {

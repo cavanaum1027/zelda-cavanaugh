@@ -22,7 +22,7 @@ export const sameAs = [
   social.artsy,
   social.substack,
   social.interview,
-  "https://github.com/Michelle-Cavanaugh/zelda-cavanaugh",
+  "https://github.com/cavanaum1027/zelda-cavanaugh",
 ];
 
 export const sectionPaths = [
