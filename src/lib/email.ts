@@ -59,6 +59,7 @@ export async function sendSaleEmail(input: {
     postal_code: string | null;
     country: string | null;
   } | null;
+  overlayCommitted?: boolean;
 }) {
   const client = resend();
   if (!client) return { error: "missing_key" as const };
@@ -92,7 +93,10 @@ export async function sendSaleEmail(input: {
     `Ship to:`,
     ship,
     ``,
-    `Mark those slugs soldOut in src/data/works.ts and deploy.`,
+    input.overlayCommitted
+      ? `The site recorded those originals as sold and committed src/data/sold-overlay.json.`
+      : `The site recorded those originals as sold. Stripe inventory blocks a second purchase immediately. Catalog overlay updates on the next deploy if GitHub is connected.`,
+    `Pack and ship the original by hand. Giclée prints stay inquiry-only.`,
   ].join("\n");
 
   const { error } = await client.emails.send({

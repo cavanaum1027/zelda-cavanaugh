@@ -8,11 +8,16 @@ import { WorkTile } from "@/components/WorkTile";
 import { JsonLd } from "@/components/JsonLd";
 import { gicleeNote } from "@/data/product-copy";
 import { formatPrice, getWork, similarWorks, works } from "@/data/works";
+import { findPaidOriginalSlugs } from "@/lib/inventory";
 import { artworkJsonLd, breadcrumbJsonLd, workMeta } from "@/lib/seo";
+import { applyLiveSold, applyLiveSoldList } from "@/lib/sold";
+import { getStripe } from "@/lib/stripe";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return works.map((work) => ({ slug: work.slug }));
@@ -20,19 +25,22 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const work = getWork(slug);
-  if (!work) return { title: "Work" };
+  const catalog = getWork(slug);
+  if (!catalog) return { title: "Work" };
+  const work = applyLiveSold(catalog, await findPaidOriginalSlugs(getStripe()));
   return workMeta(work);
 }
 
 export default async function WorkDetailPage({ params }: Props) {
   const { slug } = await params;
-  const work = getWork(slug);
-  if (!work) notFound();
+  const catalog = getWork(slug);
+  if (!catalog) notFound();
+  const liveSold = await findPaidOriginalSlugs(getStripe());
+  const work = applyLiveSold(catalog, liveSold);
 
   const index = works.findIndex((item) => item.slug === work.slug);
   const plate = String(index + 1).padStart(2, "0");
-  const related = similarWorks(work);
+  const related = applyLiveSoldList(similarWorks(work), liveSold);
   const images = work.images.length ? work.images : [work.image];
 
   return (

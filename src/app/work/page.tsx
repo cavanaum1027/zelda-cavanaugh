@@ -3,8 +3,11 @@ import Link from "next/link";
 import { OutlineNum, PageIndex, PlusRule } from "@/components/Marks";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { WorkTile } from "@/components/WorkTile";
-import { availableWorks, soldWorks } from "@/data/works";
+import { works } from "@/data/works";
+import { findPaidOriginalSlugs } from "@/lib/inventory";
+import { applyLiveSoldList } from "@/lib/sold";
 import { pageMeta } from "@/lib/seo";
+import { getStripe } from "@/lib/stripe";
 
 export const metadata: Metadata = pageMeta({
   title: "Work — original canvases",
@@ -13,6 +16,8 @@ export const metadata: Metadata = pageMeta({
   path: "/work",
 });
 
+export const dynamic = "force-dynamic";
+
 type Props = {
   searchParams: Promise<{ view?: string | string[] }>;
 };
@@ -20,7 +25,11 @@ type Props = {
 export default async function WorkPage({ searchParams }: Props) {
   const view = (await searchParams).view;
   const sold = (Array.isArray(view) ? view[0] : view) === "sold";
-  const list = sold ? soldWorks : availableWorks;
+  const liveSold = await findPaidOriginalSlugs(getStripe());
+  const liveWorks = applyLiveSoldList(works, liveSold);
+  const list = sold
+    ? liveWorks.filter((work) => work.soldOut)
+    : liveWorks.filter((work) => !work.soldOut);
 
   return (
     <div className="relative overflow-hidden px-5 pb-8 pt-28 md:px-8 lg:px-10">

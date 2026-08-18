@@ -23,7 +23,7 @@ type CartContextValue = {
   ready: boolean;
   open: boolean;
   setOpen: (open: boolean) => void;
-  add: (slug: string) => boolean;
+  add: (slug: string) => Promise<boolean>;
   setQuantity: (slug: string, quantity: number) => void;
   remove: (slug: string) => void;
   clear: () => void;
@@ -107,9 +107,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [lines],
   );
 
-  const add = useCallback((slug: string) => {
+  const add = useCallback(async (slug: string) => {
     const work = getWork(slug);
     if (!work || work.soldOut || work.print) return false;
+    try {
+      const res = await fetch(`/api/inventory?slug=${encodeURIComponent(slug)}`);
+      if (res.ok) {
+        const data = (await res.json()) as { sold?: boolean; print?: boolean };
+        if (data.sold || data.print) return false;
+      }
+    } catch {
+      // Checkout still blocks a second sale if this check cannot run.
+    }
     const current = parseEntries(getCartSnapshot());
     if (current.some((item) => item.slug === slug)) {
       setOpen(true);

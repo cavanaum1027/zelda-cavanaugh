@@ -1,4 +1,6 @@
 import type Stripe from "stripe";
+import { getWork } from "@/data/works";
+import { overlaySoldSlugs } from "@/lib/sold";
 
 function slugsFromSession(session: Stripe.Checkout.Session) {
   return (session.metadata?.slugs ?? "")
@@ -54,4 +56,44 @@ export async function findUnavailableSlugs(stripe: Stripe, slugs: string[]) {
   }
 
   return { sold: [...sold], held: [...held] };
+}
+
+let paidCache: { at: number; slugs: string[] } | null = null;
+const PAID_CACHE_MS = 20_000;
+
+function originalSlug(slug: string) {
+  const work = getWork(slug);
+  return Boolean(work && !work.print);
+}
+
+export function rememberPaidOriginals(slugs: string[]) {
+  const extra = slugs.filter(originalSlug);
+  if (extra.length === 0) return;
+  const prev = paidCache?.slugs ?? [];
+  paidCache = { at: Date.now(), slugs: [...new Set([...prev, ...extra])] };
+}
+
+export async function findPaidOriginalSlugs(stripe: Stripe | null) {
+  const overlay = overlaySoldSlugs();
+  if (!stripe) return new Set(overlay);
+
+  if (paidCache && Date.now() - paidCache.at < PAID_CACHE_MS) {
+    return new Set([...overlay, ...paidCache.slugs]);
+  }
+
+  try {
+    const complete = await listSessions(stripe, "complete");
+    const sold = new Set<string>();
+    for (const session of complete) {
+      if (session.payment_status !== "paid") continue;
+      for (const slug of slugsFromSession(session)) {
+        if (originalSlug(slug)) sold.add(slug);
+      }
+    }
+    paidCache = { at: Date.now(), slugs: [...sold] };
+    return new Set([...overlay, ...sold]);
+  } catch (error) {
+    console.warn("[stripe] paid originals lookup skipped", error);
+    return new Set([...overlay, ...(paidCache?.slugs ?? [])]);
+  }
 }

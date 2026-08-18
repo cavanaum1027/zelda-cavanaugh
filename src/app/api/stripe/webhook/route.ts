@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { revalidatePath } from "next/cache";
 import { sendSaleEmail } from "@/lib/email";
+import { rememberPaidOriginals } from "@/lib/inventory";
+import { originalSlugsFrom, persistSoldSlugs } from "@/lib/sold";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -35,21 +38,35 @@ async function fulfill(stripe: Stripe, session: Stripe.Checkout.Session) {
     full.line_items?.data.map((item) => item.description).filter(Boolean) ?? [];
 
   const shipping = shippingFrom(full);
+  const slugs = (full.metadata?.slugs ?? "")
+    .split(",")
+    .map((slug) => slug.trim())
+    .filter(Boolean);
+  const originals = originalSlugsFrom(slugs);
+  rememberPaidOriginals(originals);
+  const overlay = await persistSoldSlugs(originals);
   console.info("[stripe] payment received", {
     id: full.id,
     email: full.customer_details?.email ?? null,
-    slugs: full.metadata?.slugs ?? "",
+    slugs: originals.join(",") || slugs.join(","),
     titles,
+    overlay: overlay.committed ? "committed" : "pending",
   });
+  revalidatePath("/work");
+  revalidatePath("/");
+  for (const slug of originals) {
+    revalidatePath(`/work/${slug}`);
+  }
 
   const notice = await sendSaleEmail({
     email: full.customer_details?.email ?? null,
     phone: full.customer_details?.phone ?? null,
     titles: titles.filter((title): title is string => Boolean(title)),
-    slugs: full.metadata?.slugs ?? "",
+    slugs: originals.join(",") || slugs.join(","),
     amount: full.amount_total,
     currency: full.currency,
     shipping,
+    overlayCommitted: overlay.committed,
   });
   if ("error" in notice) {
     console.error("[stripe] sale email failed", notice.error);

@@ -1,6 +1,12 @@
+import soldOverlay from "./sold-overlay.json";
 import { productCopy } from "./product-copy";
 import { localHeroes } from "./work-heroes";
 import { localWorkImages } from "./work-images";
+
+function asSlugList(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter((item): item is string => typeof item === "string" && item.length > 0);
+}
 
 export type Work = {
   slug: string;
@@ -794,10 +800,13 @@ function enrich(work: Omit<Work, "images" | "tags">): Work {
   const merged = { ...work, ...copy };
   const diagnosis = merged.diagnosis ?? parseDiagnosis(merged.description);
   const image = localHeroes[work.slug] ?? work.image;
+  const overlay = asSlugList(soldOverlay);
+  const overlaySold = !merged.print && overlay.includes(work.slug);
   return {
     ...merged,
     diagnosis,
     image,
+    soldOut: merged.soldOut || overlaySold || undefined,
     images: galleryImages(image, extras),
     tags: diagnosisTags(diagnosis),
   };
