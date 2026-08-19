@@ -1,7 +1,7 @@
 /** Original Squarespace product copy, formatted to the Beloved pattern. */
 
 export const gicleeNote =
-  "This is a Giclée print of the original canvas, which has been sold. Prints are archival — pigment-based inks, made to last — and arrive as the image alone, without a border or frame, so you can present them as you like. They are not sold through the cart.";
+  "This is a Giclée print of the original canvas, which has been sold. Prints are archival, pigment-based inks, made to last, and arrive as the image alone, without a border or frame, so you can present them as you like.";
 
 export type ProductCopy = {
   size?: string;

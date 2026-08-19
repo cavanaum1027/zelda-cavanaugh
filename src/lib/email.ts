@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { contactEmail } from "@/data/site";
+import { getWork } from "@/data/works";
 
 function resend() {
   const apiKey = process.env.RESEND_API_KEY;
@@ -81,6 +82,29 @@ export async function sendSaleEmail(input: {
         .filter(Boolean)
         .join("\n")
     : "none";
+  const slugList = input.slugs
+    .split(",")
+    .map((slug) => slug.trim())
+    .filter(Boolean);
+  const originals = slugList.filter((slug) => {
+    const work = getWork(slug);
+    return Boolean(work && !work.print);
+  });
+  const prints = slugList.filter((slug) => getWork(slug)?.print);
+  const overlayLine =
+    originals.length === 0
+      ? "Print order. Originals were not marked sold. Prints stay available."
+      : input.overlayCommitted
+        ? `The site recorded those originals as sold and committed src/data/sold-overlay.json.`
+        : `The site recorded those originals as sold. Stripe inventory blocks a second purchase immediately. Catalog overlay updates on the next deploy if GitHub is connected.`;
+  const pack = [
+    originals.length > 0 ? "Pack and ship the original by hand." : null,
+    prints.length > 0
+      ? "Ship Giclée prints in a rigid mailer. Prints stay available; do not mark them sold."
+      : null,
+  ]
+    .filter(Boolean)
+    .join(" ");
   const text = [
     `A sale just completed on zeldacavanaugh.com.`,
     ``,
@@ -93,10 +117,8 @@ export async function sendSaleEmail(input: {
     `Ship to:`,
     ship,
     ``,
-    input.overlayCommitted
-      ? `The site recorded those originals as sold and committed src/data/sold-overlay.json.`
-      : `The site recorded those originals as sold. Stripe inventory blocks a second purchase immediately. Catalog overlay updates on the next deploy if GitHub is connected.`,
-    `Pack and ship the original by hand. Giclée prints stay inquiry-only.`,
+    overlayLine,
+    pack,
   ].join("\n");
 
   const { error } = await client.emails.send({

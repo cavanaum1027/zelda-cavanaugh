@@ -116,3 +116,14 @@ export const stripeCatalog: Record<string, StripeCatalogEntry> = {
 export function getStripePriceId(slug: string) {
   return stripeCatalog[slug]?.priceId;
 }
+
+/**
+ * Live Giclée print Price IDs on acct_1U5AA1ElE4HX66r3.
+ * Original canvas prices above must never be used for prints.
+ * Checkout falls back to price_data when a print has no Price ID here.
+ */
+export const stripePrintCatalog: Record<string, StripeCatalogEntry> = {};
+
+export function getStripePrintPriceId(slug: string) {
+  return stripePrintCatalog[slug]?.priceId;
+}

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { PlusRule } from "@/components/Marks";
 import { useCart, money } from "@/components/CartProvider";
+import { canPurchase } from "@/data/works";
 
 export default function CartPage() {
   const { lines, subtotal, remove, ready } = useCart();
@@ -14,7 +15,8 @@ export default function CartPage() {
       <header className="mt-10 max-w-xl">
         <h1 className="font-serif text-5xl tracking-tight md:text-6xl">Cart</h1>
         <p className="mt-5 text-sm leading-7 text-fg/55">
-          Original canvases. Shipping is calculated at checkout from the destination.
+          Original canvases and Giclée prints. Shipping is calculated at checkout
+          from the destination.
         </p>
       </header>
 
@@ -46,10 +48,13 @@ export default function CartPage() {
                 </Link>
                 <div className="sm:col-span-6">
                   <p className="text-xl font-semibold">{line.work.title}</p>
-                  <p className="mt-1 text-sm text-fg/45">Qty {line.quantity}</p>
+                  <p className="mt-1 text-sm text-fg/45">
+                    {line.work.print ? "Giclée print" : "Original canvas"}
+                    {" · "}Qty {line.quantity}
+                  </p>
                 </div>
                 <p className="sm:col-span-2 sm:text-right">
-                  {line.work.soldOut ? "Sold" : money(line.work.price)}
+                  {canPurchase(line.work) ? money(line.work.price) : "Sold"}
                 </p>
                 <button
                   type="button"
@@ -65,7 +70,7 @@ export default function CartPage() {
             <span>Subtotal</span>
             <span>{money(subtotal)}</span>
           </p>
-          {lines.some((line) => line.work.soldOut) ? (
+          {lines.some((line) => !canPurchase(line.work)) ? (
             <p className="mt-8 text-sm text-accent">
               A work in the cart is sold. Remove it to continue.
             </p>

@@ -12,6 +12,7 @@ export const social = {
   instagram: "https://www.instagram.com/zelda_cavanaugh/",
   substack: "https://michellecavanaugh.substack.com/",
   artsy: "https://www.artsy.net/galeria-azur/artist/zelda-cavanaugh",
+  linkedin: "https://www.linkedin.com/in/michelle--cavanaugh",
   interview:
     "https://www.contemporaryartcuratormagazine.com/home-2/zelda-cavanaugh-interview",
 };
@@ -22,6 +23,29 @@ export const identity = {
   statement:
     "Zelda Cavanaugh is the studio name of Michelle Cavanaugh, an artist working with DSM-5 diagnostic language, generative systems, gold leaf, and embroidery.",
 };
+
+export const biography = [
+  "Zelda Cavanaugh is the studio name of Michelle Cavanaugh. The work begins in clinical language — diagnostic criteria from the DSM-5, precise and almost hostile to image — and ends in the hand: gold leaf, and a suture learned in the funeral industry.",
+  "The canvases have been shown in Barcelona, London, New York, Paris, and Berlin. Consulting on AI innovation and product remains available, by inquiry. Most of the hours belong to the studio.",
+];
+
+export const education = [
+  {
+    school: "Northwestern University",
+    degree: "M.S. Information Design & Strategy",
+    note: "Distinguished Capstone Award nominee for an AI-assisted healthcare application. The same question as the canvases: how an interior state becomes something you can see.",
+  },
+  {
+    school: "Cornell University",
+    degree: "Graduate certificate, Product Management",
+    note: "eCornell executive education. The operational half of the practice — how a thing is built, governed, and shipped.",
+  },
+  {
+    school: "University of Central Florida",
+    degree: "B.A. English, Technical Communications",
+    note: "Stuart Omans Award for Excellence. Golden Key International Honour Society. Language, first.",
+  },
+];
 
 export const practice = {
   hero: "I investigate how generative systems approximate human emotion. Informed by the DSM-5, neuroscience, and a needle threaded with embroidery floss.",
@@ -236,7 +260,7 @@ export const faqs = [
   },
   {
     q: "Can I purchase original artwork?",
-    a: "Yes. Available originals are listed under Work. Add a canvas to the cart and pay on this site — shipping address is collected at checkout. If you are interested in a piece that is not listed, write through the contact form. Giclée prints of sold originals are available by inquiry — please reach out through the contact form.",
+    a: "Yes. Available originals are listed under Work. Add a canvas to the cart and pay on this site. Shipping address is collected at checkout. If you are interested in a piece that is not listed, write through the contact form. Giclée prints of sold originals can be added to the cart from the work page. Paying for a print does not sell the original, and prints stay available.",
   },
   {
     q: "What are your payment terms?",
@@ -244,7 +268,7 @@ export const faqs = [
   },
   {
     q: "What shipping options do you offer?",
-    a: "Originals ship via UPS Ground. United States from $22. Canada from $38. Britain and Ireland from $48. The rest of Europe from $55. Australia and New Zealand from $72. A second work in the same box is less than the first. Works 24 inches or larger on a side add $12. A phone number is required for the carrier. I do not ship outside those countries.",
+    a: "Originals ship via UPS Ground. United States from $22. Canada from $38. Britain and Ireland from $48. The rest of Europe from $55. Australia and New Zealand from $72. A second work in the same box is less than the first. Works 24 inches or larger on a side add $12. Prints ship in a rigid mailer. United States from $9. Canada from $16. Britain and Ireland from $20. The rest of Europe from $22. Australia and New Zealand from $28. A phone number is required for the carrier. I do not ship outside those countries.",
   },
   {
     q: "What is your return policy?",
@@ -260,7 +284,7 @@ export const faqs = [
   },
   {
     q: "What is a Giclée print?",
-    a: "A Giclée print (pronounced “zhee-clay”) is a high-quality reproduction created with pigment-based inks on archival paper. Colors remain stable for over a hundred years. Prints match the dimensions of the originals; the original canvases remain unique, with hand-applied gold gilding and embroidery that is never reproduced on canvas. Prints are not sold through the cart. If you would like to purchase a print, please reach out through the contact form to inquire.",
+    a: "A Giclée print (pronounced “zhee-clay”) is a high-quality reproduction created with pigment-based inks on archival paper. Colors remain stable for over a hundred years. Prints match the dimensions of the originals; the original canvases remain unique, with hand-applied gold gilding and embroidery that is never reproduced on canvas. Add a print to the cart from a sold work page and pay on this site. The contact form remains if you would rather inquire first.",
   },
   {
     q: "Do you provide consulting?",

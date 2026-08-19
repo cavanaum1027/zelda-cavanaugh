@@ -42,15 +42,23 @@ async function fulfill(stripe: Stripe, session: Stripe.Checkout.Session) {
     .split(",")
     .map((slug) => slug.trim())
     .filter(Boolean);
-  const originals = originalSlugsFrom(slugs);
+  const originals = originalSlugsFrom(
+    full.metadata && "originals" in full.metadata
+      ? (full.metadata.originals ?? "")
+          .split(",")
+          .map((slug) => slug.trim())
+          .filter(Boolean)
+      : slugs,
+  );
   rememberPaidOriginals(originals);
   const overlay = await persistSoldSlugs(originals);
   console.info("[stripe] payment received", {
     id: full.id,
     email: full.customer_details?.email ?? null,
-    slugs: originals.join(",") || slugs.join(","),
+    slugs: slugs.join(","),
+    originals: originals.join(",") || "none",
     titles,
-    overlay: overlay.committed ? "committed" : "pending",
+    overlay: originals.length === 0 ? "skipped" : overlay.committed ? "committed" : "pending",
   });
   revalidatePath("/work");
   revalidatePath("/");
@@ -62,7 +70,7 @@ async function fulfill(stripe: Stripe, session: Stripe.Checkout.Session) {
     email: full.customer_details?.email ?? null,
     phone: full.customer_details?.phone ?? null,
     titles: titles.filter((title): title is string => Boolean(title)),
-    slugs: originals.join(",") || slugs.join(","),
+    slugs: slugs.join(","),
     amount: full.amount_total,
     currency: full.currency,
     shipping,

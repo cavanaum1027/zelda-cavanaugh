@@ -846,3 +846,10 @@ export function formatPrice(price: number) {
     minimumFractionDigits: 0,
   }).format(price);
 }
+
+/** Prints stay buyable after the original is sold. Originals do not. */
+export function canPurchase(work: Pick<Work, "print" | "soldOut" | "price">) {
+  if (work.price <= 0) return false;
+  if (work.print) return true;
+  return !work.soldOut;
+}

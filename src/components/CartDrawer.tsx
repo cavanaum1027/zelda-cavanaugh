@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCart, money } from "@/components/CartProvider";
+import { canPurchase } from "@/data/works";
 
 export function CartDrawer() {
   const { open, setOpen, lines, subtotal, remove } = useCart();
@@ -64,7 +65,8 @@ export function CartDrawer() {
                   <div className="min-w-0 flex-1">
                     <p className="truncate">{line.work.title}</p>
                     <p className="mt-1 text-sm text-fg/45">
-                      {line.work.soldOut ? "Sold" : money(line.work.price)}
+                      {line.work.print ? "Giclée print · " : ""}
+                      {canPurchase(line.work) ? money(line.work.price) : "Sold"}
                     </p>
                     <button
                       type="button"
@@ -83,9 +85,9 @@ export function CartDrawer() {
                 <span>{money(subtotal)}</span>
               </p>
               <p className="mt-2 text-[12px] text-fg/40">
-                UPS Ground. United States from $22. Calculated at checkout.
+                Shipping is calculated at checkout.
               </p>
-              {lines.some((line) => line.work.soldOut) ? (
+              {lines.some((line) => !canPurchase(line.work)) ? (
                 <p className="mt-4 text-sm text-accent">
                   A work in the cart is sold. Remove it to continue.
                 </p>

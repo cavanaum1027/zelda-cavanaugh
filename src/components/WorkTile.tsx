@@ -29,7 +29,11 @@ export function WorkTile({
       <span className="mt-3 flex items-baseline justify-between gap-3 text-[13px]">
         <span>{work.title}</span>
         <span className="text-fg/45">
-          {work.soldOut ? "sold" : formatPrice(work.price)}
+          {work.print
+            ? `${formatPrice(work.price)} print`
+            : work.soldOut
+              ? "sold"
+              : formatPrice(work.price)}
         </span>
       </span>
     </Link>

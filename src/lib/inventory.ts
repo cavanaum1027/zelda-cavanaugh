@@ -3,7 +3,13 @@ import { getWork } from "@/data/works";
 import { overlaySoldSlugs } from "@/lib/sold";
 
 function slugsFromSession(session: Stripe.Checkout.Session) {
-  return (session.metadata?.slugs ?? "")
+  // Prefer `originals` so a paid print never inventory-locks a canvas.
+  // Empty string means a print-only order. Missing key falls back to legacy `slugs`.
+  const raw =
+    session.metadata && "originals" in session.metadata
+      ? (session.metadata.originals ?? "")
+      : (session.metadata?.slugs ?? "");
+  return raw
     .split(",")
     .map((slug) => slug.trim())
     .filter(Boolean);
@@ -29,7 +35,7 @@ async function listSessions(stripe: Stripe, status: "complete" | "open") {
 }
 
 export async function findUnavailableSlugs(stripe: Stripe, slugs: string[]) {
-  const wanted = new Set(slugs);
+  const wanted = new Set(slugs.filter(originalSlug));
   const sold = new Set<string>();
   const held = new Set<string>();
 

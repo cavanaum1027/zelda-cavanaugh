@@ -75,7 +75,11 @@ export default async function WorkDetailPage({ params }: Props) {
           <h1 className="mt-3 text-5xl font-extrabold tracking-tight">{work.title}</h1>
           <p className="mt-4 text-xl">
             {formatPrice(work.price)}
-            {work.soldOut ? <span className="ml-3 text-accent">Sold</span> : null}
+            {work.print ? (
+              <span className="ml-3 text-fg/40">Giclée print</span>
+            ) : work.soldOut ? (
+              <span className="ml-3 text-accent">Sold</span>
+            ) : null}
           </p>
           {work.quote ? (
             <blockquote className="mt-8 max-w-prose">
@@ -92,13 +96,7 @@ export default async function WorkDetailPage({ params }: Props) {
           ) : null}
           {work.print ? (
             <p className="mt-6 max-w-prose text-sm leading-7 text-fg/45">
-              {gicleeNote}{" "}
-              <Link
-                href={`/contact?work=${encodeURIComponent(work.title)}&print=1`}
-                className="text-fg/70 hover:text-accent"
-              >
-                If you would like to purchase a print, please reach out to inquire.
-              </Link>
+              {gicleeNote}
             </p>
           ) : null}
           {work.diagnosis || work.size ? (
@@ -107,26 +105,24 @@ export default async function WorkDetailPage({ params }: Props) {
             </p>
           ) : null}
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            {work.print ? (
-              <Link
-                href={`/contact?work=${encodeURIComponent(work.title)}&print=1`}
-                className="pill"
-              >
-                Inquire about a print
-              </Link>
-            ) : (
-              <>
-                <AddToCart slug={work.slug} soldOut={work.soldOut} />
-                <Link
-                  href={`/contact?work=${encodeURIComponent(work.title)}`}
-                  className="inline-flex items-center text-sm lowercase text-fg/70 hover:text-accent"
-                >
-                  + inquire
-                </Link>
-              </>
-            )}
+            <AddToCart slug={work.slug} soldOut={Boolean(work.soldOut && !work.print)} />
+            <Link
+              href={
+                work.print
+                  ? `/contact?work=${encodeURIComponent(work.title)}&print=1`
+                  : `/contact?work=${encodeURIComponent(work.title)}`
+              }
+              className="inline-flex items-center text-sm lowercase text-fg/70 hover:text-accent"
+            >
+              + inquire
+            </Link>
           </div>
-          {!work.print && !work.soldOut ? (
+          {work.print ? (
+            <p className="mt-4 text-[12px] text-fg/40">
+              Prints ship in a rigid mailer. United States from $9, Canada from
+              $16, Europe from $20. Calculated at checkout.
+            </p>
+          ) : !work.soldOut ? (
             <p className="mt-4 text-[12px] text-fg/40">
               UPS Ground. United States from $22, Canada from $38, Europe from
               $48. Works 24 inches or larger add $12. Calculated at checkout.

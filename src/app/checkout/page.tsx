@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { PlusRule } from "@/components/Marks";
 import { useCart } from "@/components/CartProvider";
+import { canPurchase } from "@/data/works";
 
 type CheckoutConfig = {
   configured?: boolean;
@@ -16,7 +17,7 @@ export default function CheckoutPage() {
   const { lines, ready } = useCart();
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<CheckoutConfig | null>(null);
-  const purchasable = lines.filter((line) => !line.work.soldOut && !line.work.print);
+  const purchasable = lines.filter((line) => canPurchase(line.work));
   const slugs = purchasable.map((line) => line.slug).join(",");
   const publishableKey = config?.publishableKey ?? "";
   const stripePromise = useMemo<Promise<Stripe | null> | null>(() => {

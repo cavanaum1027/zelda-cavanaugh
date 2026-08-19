@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getStripePriceId } from "@/data/stripe-catalog";
-import { getWork } from "@/data/works";
+import { getStripePriceId, getStripePrintPriceId } from "@/data/stripe-catalog";
+import { canPurchase, getWork } from "@/data/works";
 import { findUnavailableSlugs } from "@/lib/inventory";
 import {
   PHYSICAL_TAX_CODE,
@@ -54,6 +54,7 @@ export async function POST(request: Request) {
   const slugs: string[] = [];
   const lineItems = [];
   const taxEnabled = stripeTaxEnabled();
+  const origin = siteOrigin(request);
 
   for (const item of items) {
     const slug = String(item.slug ?? "");
@@ -61,19 +62,13 @@ export async function POST(request: Request) {
     if (!work) {
       return NextResponse.json({ error: `Unknown work: ${slug}` }, { status: 400 });
     }
-    if (work.soldOut) {
+    if (!canPurchase(work)) {
       return NextResponse.json({ error: `${work.title} is sold.` }, { status: 400 });
     }
-    if (work.print) {
-      return NextResponse.json(
-        {
-          error: `${work.title} is a Giclée print. Write through the contact form to inquire about a print.`,
-        },
-        { status: 400 },
-      );
-    }
     slugs.push(work.slug);
-    const priceId = getStripePriceId(work.slug);
+    const priceId = work.print
+      ? getStripePrintPriceId(work.slug)
+      : getStripePriceId(work.slug);
     if (priceId) {
       lineItems.push({
         quantity: 1,
@@ -89,15 +84,22 @@ export async function POST(request: Request) {
           unit_amount: Math.round(work.price * 100),
           tax_behavior: taxEnabled ? ("exclusive" as const) : undefined,
           product_data: {
-            name: `Zelda Cavanaugh — ${work.title}`,
-            description: work.description ?? work.size ?? "Original canvas",
+            name: work.print
+              ? `Zelda Cavanaugh, ${work.title} (Giclée print)`
+              : `Zelda Cavanaugh — ${work.title}`,
+            description: work.print
+              ? [work.size, "Giclée print"].filter(Boolean).join(". ")
+              : (work.description ?? work.size ?? "Original canvas"),
             images: [
               work.image.startsWith("http")
                 ? work.image
-                : `${siteOrigin(request)}${work.image}`,
+                : `${origin}${work.image}`,
             ],
             tax_code: PHYSICAL_TAX_CODE,
-            metadata: { slug: work.slug },
+            metadata: {
+              slug: work.slug,
+              kind: work.print ? "print" : "original",
+            },
           },
         },
       });
@@ -108,32 +110,43 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Cart is empty." }, { status: 400 });
   }
 
-  const unavailable = await findUnavailableSlugs(stripe, slugs);
-  if (unavailable.sold.length > 0) {
-    const titles = unavailable.sold
-      .map((slug) => getWork(slug)?.title ?? slug)
-      .join(", ");
-    return NextResponse.json(
-      { error: `${titles} just sold. Remove it from the cart.` },
-      { status: 409 },
-    );
-  }
-  if (unavailable.held.length > 0) {
-    const titles = unavailable.held
-      .map((slug) => getWork(slug)?.title ?? slug)
-      .join(", ");
-    return NextResponse.json(
-      {
-        error: `${titles} is in another checkout. Try again in a few minutes, or write through the contact form.`,
-      },
-      { status: 409 },
-    );
+  const originalSlugs = slugs.filter((slug) => !getWork(slug)?.print);
+  const printSlugs = slugs.filter((slug) => getWork(slug)?.print);
+  if (originalSlugs.length > 0) {
+    const unavailable = await findUnavailableSlugs(stripe, originalSlugs);
+    if (unavailable.sold.length > 0) {
+      const titles = unavailable.sold
+        .map((slug) => getWork(slug)?.title ?? slug)
+        .join(", ");
+      return NextResponse.json(
+        { error: `${titles} just sold. Remove it from the cart.` },
+        { status: 409 },
+      );
+    }
+    if (unavailable.held.length > 0) {
+      const titles = unavailable.held
+        .map((slug) => getWork(slug)?.title ?? slug)
+        .join(", ");
+      return NextResponse.json(
+        {
+          error: `${titles} is in another checkout. Try again in a few minutes, or write through the contact form.`,
+        },
+        { status: 409 },
+      );
+    }
   }
 
-  const origin = siteOrigin(request);
-  const metadata: Record<string, string> = { slugs: slugs.join(",") };
-  for (const slug of slugs) {
+  const hasOriginal = originalSlugs.length > 0;
+  const metadata: Record<string, string> = {
+    slugs: slugs.join(","),
+    originals: originalSlugs.join(","),
+    prints: printSlugs.join(","),
+  };
+  for (const slug of originalSlugs) {
     metadata[`w_${slug}`.slice(0, 40)] = "1";
+  }
+  for (const slug of printSlugs) {
+    metadata[`p_${slug}`.slice(0, 40)] = "1";
   }
 
   try {
@@ -166,8 +179,9 @@ export async function POST(request: Request) {
         ],
         custom_text: {
           shipping_address: {
-            message:
-              "Shipping is calculated from this address. Original canvases ship via UPS. Include a phone number the carrier can reach.",
+            message: hasOriginal
+              ? "Shipping is calculated from this address. Original canvases ship via UPS. Include a phone number the carrier can reach."
+              : "Shipping is calculated from this address. Prints ship via UPS in a rigid mailer. Include a phone number the carrier can reach.",
           },
         },
         return_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,

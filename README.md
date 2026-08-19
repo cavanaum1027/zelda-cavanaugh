@@ -11,7 +11,7 @@ Open [http://127.0.0.1:3001](http://127.0.0.1:3001).
 
 ## What the site does
 
-- `/work` lists available originals. `/work?view=sold` lists sold work. Giclée prints of sold pieces are inquiry only.
+- `/work` lists available originals. `/work?view=sold` lists sold work. Giclée prints of sold pieces can be added to the cart.
 - Cart and Stripe Embedded Checkout stay on this domain. Shipping is quoted at checkout.
 - `/contact` sends mail to zeldacavanaugh@gmail.com through Resend.
 - `/notes` holds Field Notes essays. `/privacy` is the short privacy note.
@@ -54,7 +54,7 @@ The form posts to `/api/contact`. Resend delivers to zeldacavanaugh@gmail.com. R
 1. Confirm the Stripe payment and the studio email. Pack and ship the original by hand.
 2. The webhook records paid original slugs. `/work` and add-to-cart consult that overlay plus Stripe, so the piece shows as sold without a manual catalog edit. Checkout still uses `findUnavailableSlugs` as the lock against a double sale.
 3. If `GITHUB_TOKEN` or `SOLD_OVERLAY_TOKEN` is set on Vercel (a GitHub PAT with `contents:write` on this repo), the webhook commits `src/data/sold-overlay.json`. A git-connected production deploy then bakes the overlay into the catalog. Without a token, Stripe inventory still blocks purchase until the next deploy.
-4. If a Giclée should be offered, set `print: true` in `src/data/product-copy.ts`. Do not use this path to mark prints sold.
+4. If a Giclée should be offered, set `print: true` in `src/data/product-copy.ts`. Prints stay available after purchase. Do not use this path to mark prints sold.
 
 ## Deploy
 

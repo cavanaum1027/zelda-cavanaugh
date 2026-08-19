@@ -94,7 +94,7 @@ export function workSeoTitle(work: Work) {
 export function workSeoDescription(work: Work) {
   const size = work.size ? `, ${work.size}` : "";
   if (work.print) {
-    return `${work.title}${size} — Giclée print of the original canvas by Zelda Cavanaugh. Inquire to purchase a print.`;
+    return `${work.title}${size}, Giclée print of the original canvas by Zelda Cavanaugh. Add a print to the cart to purchase.`;
   }
   const diagnosis = work.diagnosis
     ? ` after DSM-5 criteria for ${work.diagnosis}`
@@ -168,17 +168,16 @@ export function artworkJsonLd(work: Work) {
     data.width = { "@type": "Distance", name: `${size.width} in` };
     data.height = { "@type": "Distance", name: `${size.height} in` };
   }
-  if (!work.print) {
-    data.offers = {
-      "@type": "Offer",
-      url: absoluteUrl(`/work/${work.slug}`),
-      priceCurrency: "USD",
-      price: String(work.price),
-      availability: work.soldOut
-        ? "https://schema.org/SoldOut"
-        : "https://schema.org/InStock",
-    };
-  }
+  data.offers = {
+    "@type": "Offer",
+    url: absoluteUrl(`/work/${work.slug}`),
+    priceCurrency: "USD",
+    price: String(work.price),
+    availability:
+      work.print || !work.soldOut
+        ? "https://schema.org/InStock"
+        : "https://schema.org/SoldOut",
+  };
   return data;
 }
 
@@ -275,13 +274,14 @@ function workLine(work: Work) {
   const bits = [
     work.size,
     work.diagnosis,
-    work.print ? "Giclée print, inquire to purchase" : work.soldOut ? "sold" : "available",
+    work.print ? "Giclée print, available" : work.soldOut ? "sold" : "available",
   ].filter(Boolean);
   return `- [${work.title}](${absoluteUrl(`/work/${work.slug}`)})${bits.length ? ` — ${bits.join(", ")}` : ""}`;
 }
 
 export function llmsTxt() {
   const originals = works.filter((work) => !work.print);
+  const prints = works.filter((work) => work.print);
   const pages = [
     ["Home", "/", SITE_DESCRIPTION],
     ["Work", "/work", "Original canvases. Available work is listed first; sold work is archived on the same page."],
@@ -291,7 +291,7 @@ export function llmsTxt() {
     ["Research", "/research", "Moodl.y, systems thinking, and studio research."],
     ["FAQ", "/faq", "Identity, originals versus prints, commissions, shipping, returns."],
     ["Notes", "/notes", "Field Notes: studio writing on generative systems, bureaucracy, and the half-life of digital thought."],
-    ["Contact", "/contact", "Inquiry form. Prints and commissions by inquiry."],
+    ["Contact", "/contact", "Inquiry form. Commissions and other questions by inquiry. Prints can be purchased from the cart."],
   ] as const;
 
   const lines = [
@@ -325,9 +325,13 @@ export function llmsTxt() {
     "",
     "## Catalog",
     "",
-    "Original canvases. Giclée prints of sold work are available by inquiry via the contact form, not the cart.",
+    "Original canvases. Giclée prints of sold work can be added to the cart. Paying for a print does not mark the original or the print sold.",
     "",
     ...originals.map(workLine),
+    "",
+    "Giclée prints of sold originals, available through the cart:",
+    "",
+    ...prints.map(workLine),
     "",
     "## Exhibitions",
     "",

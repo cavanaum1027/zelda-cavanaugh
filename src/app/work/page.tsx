@@ -12,7 +12,7 @@ import { getStripe } from "@/lib/stripe";
 export const metadata: Metadata = pageMeta({
   title: "Work — original canvases",
   description:
-    "Available original canvases by Zelda Cavanaugh, finished with gold leaf and embroidery. Giclée prints of sold works are listed separately and available by inquiry.",
+    "Available original canvases by Zelda Cavanaugh, finished with gold leaf and embroidery. Giclée prints of sold works can be added to the cart.",
   path: "/work",
 });
 
@@ -45,7 +45,7 @@ export default async function WorkPage({ searchParams }: Props) {
         <h1 className="mt-6 text-5xl font-extrabold tracking-tight md:text-6xl">Work</h1>
         <p className="mt-5 text-sm leading-7 text-fg/55">
           {sold
-            ? "Sold originals. Giclée prints of these works are available by inquiry."
+            ? "Sold originals. Giclée prints of these works can be added to the cart."
             : "Original canvases available to purchase, finished with gold leaf and a suture learned in the funeral industry. The embroidered originals are never reproduced on canvas."}
         </p>
         <nav className="mt-8 flex gap-5 text-sm lowercase">

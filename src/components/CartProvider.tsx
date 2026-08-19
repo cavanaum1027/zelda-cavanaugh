@@ -9,7 +9,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { CART_STORAGE_KEY, type CartEntry } from "@/lib/commerce";
-import { formatPrice, getWork, type Work } from "@/data/works";
+import { canPurchase, formatPrice, getWork, type Work } from "@/data/works";
 import { CartDrawer } from "@/components/CartDrawer";
 
 export type CartLine = CartEntry & {
@@ -91,7 +91,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     () =>
       entries.flatMap((entry) => {
         const work = getWork(entry.slug);
-        if (!work || work.print) return [];
+        if (!work) return [];
         return [{ ...entry, work }];
       }),
     [entries],
@@ -109,15 +109,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const add = useCallback(async (slug: string) => {
     const work = getWork(slug);
-    if (!work || work.soldOut || work.print) return false;
-    try {
-      const res = await fetch(`/api/inventory?slug=${encodeURIComponent(slug)}`);
-      if (res.ok) {
-        const data = (await res.json()) as { sold?: boolean; print?: boolean };
-        if (data.sold || data.print) return false;
+    if (!work || !canPurchase(work)) return false;
+    if (!work.print) {
+      try {
+        const res = await fetch(`/api/inventory?slug=${encodeURIComponent(slug)}`);
+        if (res.ok) {
+          const data = (await res.json()) as { sold?: boolean; print?: boolean };
+          if (data.sold || data.print) return false;
+        }
+      } catch {
+        // Checkout still blocks a second sale if this check cannot run.
       }
-    } catch {
-      // Checkout still blocks a second sale if this check cannot run.
     }
     const current = parseEntries(getCartSnapshot());
     if (current.some((item) => item.slug === slug)) {
